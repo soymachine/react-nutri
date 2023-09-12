@@ -42,6 +42,9 @@ function Login(props) {
 	const navigate = useNavigate()
 	const [notification, setNotification] = useState(null)
 
+	console.log(`props.user:${props.user}`)
+	console.log(props)
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
@@ -70,25 +73,7 @@ function Login(props) {
 		}
 	  };
 
-	const handleLogin = async (event) => {
-		event.preventDefault()
-
-		try {
-			const user = await loginService.login({
-				username, password,
-			})
-
-			cartillesService.setToken(user.token)
-			props.OnUserLoggedIn(user)
-			setUsername('')
-			setPassword('')
-		} catch (exception) {
-			setNotification('Wrong credentials')
-			setTimeout(() => {
-				setNotification(null)
-			}, maxNotificationTime)
-		}
-	}
+	
 
 	const loginForm = () => (
 		<>
@@ -171,7 +156,7 @@ function Login(props) {
 	)
 
 	const checkRender = () => {
-		if(props.user != null){
+		if(props.user != null && props.user != ""){
 			return alreadyLogged()
 		}else{
 			return loginForm()

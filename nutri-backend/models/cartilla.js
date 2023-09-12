@@ -1,8 +1,5 @@
 const mongoose = require('mongoose')
 const Apat = require('./apat')
-const Exercici = require('./exercici')
-
-
 
 const cartillaSchema = new mongoose.Schema({
     fruita: Number,
@@ -14,14 +11,35 @@ const cartillaSchema = new mongoose.Schema({
       type: Apat.schema,
       required: true,
     },
+    esmorzar: {
+      type: Apat.schema,
+      required: true,
+    },
+    berenar: {
+      type: Apat.schema,
+      required: true,
+    },
+    migMati: {
+      type: Apat.schema,
+      required: true,
+    },
     likes: Number,
     date: Date,
     pes: Number,
-    exercici: {
-      type: Exercici.schema,
+    forca: {
+      type: Boolean,
+      required: false,
+    },
+    cardio: {
+      type: Boolean,
       required: false,
     },
     alcohol: Number,
+    dolcos: Number,
+    verdura: Number,
+    refrescos: Number,
+    extresSalats: Number,
+    xocolata: Number,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Usuari'

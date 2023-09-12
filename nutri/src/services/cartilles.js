@@ -35,33 +35,45 @@ const validateCartilla = cartillaObj => {
 	cartillaObj.dinar.fibra = parseFloat(cartillaObj.dinar.fibra)
 	cartillaObj.dinar.hidrats = parseFloat(cartillaObj.dinar.hidrats)
 	cartillaObj.dinar.proteines = parseFloat(cartillaObj.dinar.proteines)
+	cartillaObj.dinar.greixos = parseFloat(cartillaObj.dinar.greixos)
+	cartillaObj.dinar.lactics = parseFloat(cartillaObj.dinar.lactics)
 
 	cartillaObj.sopar.fibra = parseFloat(cartillaObj.sopar.fibra)
 	cartillaObj.sopar.hidrats = parseFloat(cartillaObj.sopar.hidrats)
 	cartillaObj.sopar.proteines = parseFloat(cartillaObj.sopar.proteines)
+	cartillaObj.sopar.greixos = parseFloat(cartillaObj.sopar.greixos)
+	cartillaObj.sopar.lactics = parseFloat(cartillaObj.sopar.lactics)
 
 	cartillaObj.esmorzar.fibra = parseFloat(cartillaObj.esmorzar.fibra)
 	cartillaObj.esmorzar.hidrats = parseFloat(cartillaObj.esmorzar.hidrats)
 	cartillaObj.esmorzar.proteines = parseFloat(cartillaObj.esmorzar.proteines)
+	cartillaObj.esmorzar.greixos = parseFloat(cartillaObj.esmorzar.greixos)
+	cartillaObj.esmorzar.lactics = parseFloat(cartillaObj.esmorzar.lactics)
 
 	cartillaObj.migMati.fibra = parseFloat(cartillaObj.migMati.fibra)
 	cartillaObj.migMati.hidrats = parseFloat(cartillaObj.migMati.hidrats)
 	cartillaObj.migMati.proteines = parseFloat(cartillaObj.migMati.proteines)
+	cartillaObj.migMati.greixos = parseFloat(cartillaObj.migMati.greixos)
+	cartillaObj.migMati.lactics = parseFloat(cartillaObj.migMati.lactics)
 
 	cartillaObj.berenar.fibra = parseFloat(cartillaObj.berenar.fibra)
 	cartillaObj.berenar.hidrats = parseFloat(cartillaObj.berenar.hidrats)
 	cartillaObj.berenar.proteines = parseFloat(cartillaObj.berenar.proteines)
+	cartillaObj.berenar.greixos = parseFloat(cartillaObj.berenar.greixos)
+	cartillaObj.berenar.lactics = parseFloat(cartillaObj.berenar.lactics)
 }
 
 const sendCartilla = async (cartillaObject, isNew, cartillaID) =>{
 	// create cartilla o updatecartilla
-	console.log(`sendCartilla, isNew:${isNew}`)
+	console.log(`sendCartilla, isNew:${isNew} cartillaID:${cartillaID}`)
 	if(isNew){
 		return createCartilla(cartillaObject)
 	}else{
 		return updateCartilla(cartillaObject, cartillaID)
 	}
 }
+
+
 
 const createCartilla = async newObject => {
 	const config = {
@@ -75,8 +87,8 @@ const updateCartilla = async (cartillaObj, cartillaID) => {
 	const config = {
 		headers: { Authorization: token },
 	}
-	console.log(cartillaObj)
 	console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
+	console.log(cartillaObj)
 	const response = await axios.put(`${baseUrl}/${cartillaID}`, cartillaObj, config)
 	return response.data
 }

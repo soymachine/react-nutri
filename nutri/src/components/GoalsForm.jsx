@@ -1,19 +1,42 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import ApatForm from './ApatForm'
+import { useState, useEffect, useRef } from 'react'
+import ObjectiveNumberForm from './ObjectiveNumberForm'
 import NumberForm from './NumberForm'
-import ExerciciForm from './ExerciciForm'
+import { Box, Chip, Divider, TextField } from '@mui/material'
+import UserData from '../logic/data/UserData'
+
+let greenColor = '#96C291'
+let yellowColor = '#FFBA86'
+let redColor = '#FFB7B7'
+
+const userData = UserData.getInstance()
 
 function GoalsForm(props) {
 	let navigate = props.navigate
 
-	const [fruita, setFruita] = useState(3)
-	const [pes, setPes] = useState(60)
-	const [alcohol, setAlcohol] = useState(1)
-	const [date, setDate] = useState('')
-	const [dinar, setDinar] = useState({})
-	const [sopar, setSopar] = useState({})
-	const [exercici, setExercici] = useState({ fet:false, tipus:'correr' })
+	let submitLabel = userData.isGoalsSet? "Actualitzar": "Desar"
+
+	let fruita_init_value = userData.getGoalsData("fruita")
+	let alcohol_init_value = userData.getGoalsData("alcohol")
+	let refrescos_init_value = userData.getGoalsData("refrescos")
+	let verdura_init_value = userData.getGoalsData("verdura")
+	let xocolata_init_value = userData.getGoalsData("xocolata")
+	let dolcos_init_value = userData.getGoalsData("dolcos")
+	let extresSalats_init_value = userData.getGoalsData("extresSalats")
+	let forca_init_value = userData.getGoalsData("forca")
+	let cardio_init_value = userData.getGoalsData("cardio")
+	let pes_init_value = userData.getGoalsData("pes")
+
+	const fruitaNumberRef = useRef()	
+	const verduraNumberRef = useRef()	
+	const alcoholNumberRef = useRef()
+	const xocolataNumberRef = useRef()
+	const dolcosNumberRef = useRef()
+	const refrescosNumberRef = useRef()
+	const extresSalatsNumberRef = useRef()
+	const pesNumberRef = useRef()
+	const forcaNumberRef = useRef()
+	const cardioNumberRef = useRef()
+	
 	const [user, setUser] = useState(props.user)
 
 	const hook = () => {
@@ -21,17 +44,26 @@ function GoalsForm(props) {
 		if(user === null){
 			returnToHome()
 		}
-
-		// Get date
-		setDate(new Date().toString())
 	}
 
 	useEffect(hook, [])
 
-	const OnCartillaSubmit = (event) => {
+	const OnGoalsSubmit = (event) => {
 		event.preventDefault()
-		props.OnCartillaSubmit({
-			pes, fruita, alcohol, date, dinar, sopar, exercici
+
+		const fruita = fruitaNumberRef.current.getQuantity()
+		const alcohol = alcoholNumberRef.current.getQuantity()
+		const dolcos = dolcosNumberRef.current.getQuantity()
+		const verdura = verduraNumberRef.current.getQuantity()
+		const xocolata = xocolataNumberRef.current.getQuantity()
+		const extresSalats = extresSalatsNumberRef.current.getQuantity()
+		const refrescos = refrescosNumberRef.current.getQuantity()
+		const forca = forcaNumberRef.current.getQuantity()
+		const cardio = cardioNumberRef.current.getQuantity()
+		const pes = pesNumberRef.current.getQuantity()
+
+		props.OnGoalsSubmit({
+			fruita, verdura, xocolata, dolcos, extresSalats, alcohol, refrescos, forca, cardio, pes
 		})
 	}
 
@@ -53,24 +85,75 @@ function GoalsForm(props) {
 
 	const plantillaForm = () => (
 		<>
-			<div>Usuario: {user.username}</div>
-			<h1>Metas</h1>
-
-			<div>Fecha: {date}</div>
+			<div>Usuari: {user.username}</div>
+			<h1>Objectius</h1>
 			<div>
-				<form onSubmit={OnCartillaSubmit}>
-					<NumberForm title={'Fruita'} setModel={setFruita} model={fruita}/>
-					<ApatForm title={'Dinar'} setModel={setDinar} model={dinar}/>
-					<ApatForm title={'Sopar'} setModel={setSopar} model={sopar}/>
+				<form onSubmit={OnGoalsSubmit}>
+				<Divider maxwidth="md" sx={{m:1}}>
+					<Chip label="Menjar"/>
+				</Divider>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent:"center",
+						marginTop:2
+						}}>
+					<ObjectiveNumberForm ref={verduraNumberRef} initValue={verdura_init_value} title={'Verdura'} color={greenColor} />
+					<Divider orientation="vertical" flexItem sx={{m:1}} />
+					<ObjectiveNumberForm ref={fruitaNumberRef} initValue={fruita_init_value} title={'Fruita'} color={greenColor}/>
+				</Box>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent:"center",
+						marginTop:2
+						}}>
+					<ObjectiveNumberForm ref={xocolataNumberRef} initValue={xocolata_init_value} title={'Xocolata'} color={redColor}/>
+					<Divider orientation="vertical" flexItem sx={{m:1}} />
+					<ObjectiveNumberForm ref={dolcosNumberRef} initValue={dolcos_init_value} title={'Dolços'} color={redColor}/>
+					<Divider orientation="vertical" flexItem sx={{m:1}} />
+					<ObjectiveNumberForm ref={extresSalatsNumberRef} initValue={extresSalats_init_value} title={'Extres Salats'} color={redColor}/>
+					<Divider orientation="vertical" flexItem sx={{m:1}} />
+					<ObjectiveNumberForm ref={alcoholNumberRef} initValue={alcohol_init_value} title={'Alcohol'} color={redColor}/>
+					<Divider orientation="vertical" flexItem sx={{m:1}} />
+					<ObjectiveNumberForm ref={refrescosNumberRef} initValue={refrescos_init_value} title={'Refrescos'} color={redColor}/>
+				</Box>
+				<Divider maxwidth="md" sx={{mt:2}}>
+					<Chip label="Exercici físic"/>
+				</Divider>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent:"center",
+						marginTop:2
+						}}>
+					<ObjectiveNumberForm ref={forcaNumberRef} initValue={forca_init_value} title={'Força'} color={yellowColor}/>
+					<Divider orientation="vertical" flexItem sx={{m:1}} />
+					<ObjectiveNumberForm ref={cardioNumberRef} initValue={cardio_init_value} title={'Cardio'} color={yellowColor}/>
+				</Box>
+				<Divider maxwidth="md" sx={{mt:2}}>
+					<Chip label="Altres"/>
+				</Divider>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent:"center",
+						marginTop:2,
+						mb:2
+						}}>
+					<NumberForm ref={pesNumberRef} initValue={forca_init_value} title={'Pes'}/>
+				</Box>
 					<div>
-                    Pes: <input value={pes} onChange={handlePesChange} />
+						<button type="submit">{submitLabel}</button>
 					</div>
-					<NumberForm title={'Alcohol'} setModel={setAlcohol} model={alcohol}/>
-					<ExerciciForm cb_label={'Exercici?'} setModel={setExercici} model={exercici}/>
-					<div>
-						<button type="submit">Save</button>
-					</div>
-
 				</form>
 			</div>
 		</>

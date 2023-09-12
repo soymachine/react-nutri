@@ -49,7 +49,7 @@ function ApatForm({ title, setModel, model }) {
 	const handleGreixosChange = (event) => {
 		let newGreix = (event.target.value)
 		setGreixos(newGreix)
-		setModel({ ...model, greix:newGreix })
+		setModel({ ...model, greixos:newGreix })
 	}
 
 	const handleLacticsChange = (event) => {

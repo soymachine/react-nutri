@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import cartillesService from './services/cartilles'
+import goalsService from './services/goals'
 
 import CartillaForm from './components/CartillaForm'
 import GoalsForm from './components/GoalsForm'
@@ -18,12 +19,8 @@ import UserData from './logic/data/UserData'
 import './App.css'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-
-
 const userData = UserData.getInstance()
 const userStorage = UserStorage.getInstance()
-
-
 
 function App() {
 	const navigate = useNavigate()
@@ -33,30 +30,62 @@ function App() {
 		if (userStorage.isUserInStorage()) {
 			const user = userStorage.getJSON()
 			OnUserLoggedIn(user)
+		}else{
+			navigate('/')
 		}
 	}, [])
 
 	const OnCartillaSubmit = (cartillaObj) => {
 		cartillesService.validateCartilla(cartillaObj)
 
-		let id = null
+		let cartillaID = null
 		if(userData.isTodayDataSet){
-			id = userData.todayData.id
+			cartillaID = userData.todayData.id
 		}
 
 		console.log(cartillaObj)
+		console.log(`OnCartillaSubmit, cartillaID:${cartillaID} userData.isTodayDataSet:${userData.isTodayDataSet}`)
 
 		// O creamos una nueva o actualizamos la actual
-		/*
-		cartillesService.sendCartilla(cartillaObj, !userData.isTodayDataSet, id)
+		// Comentar esto para development que no se envie nada
+		//*
+		cartillesService.sendCartilla(cartillaObj, !userData.isTodayDataSet, cartillaID)
 			.then(cartillaReturned => {
 				// Mostrar algo de éxito aqui
 				console.log('Data updated correctly!')
+				// Agregar la info de todayData al objeto userData
+				userData.setTodayData(cartillaReturned)
 			})
 			.catch(error => {
 				console.log(error)
 			})
-		*/
+		//*/
+	}
+
+	const OnGoalsSubmit = (goalsObj) => {
+
+		let goalID = null
+		if(userData.isGoalsSet){
+			goalID = userData.todayData.id
+		}
+
+		console.log(goalsObj)
+		console.log(`OnGoalsSubmit, cartillaID:${goalID} userData.isGoalsSet:${userData.isGoalsSet}`)
+
+		// O creamos una nueva o actualizamos la actual
+		// Comentar esto para development que no se envie nada
+		//*
+		goalsService.sendObjectives(goalsObj, !userData.isGoalsSet, goalID)
+			.then(goalsReturned => {
+				// Mostrar algo de éxito aqui
+				console.log('Data updated correctly!')
+				// Agregar la info de todayData al objeto userData
+				userData.setGoalsData(goalsReturned)
+			})
+			.catch(error => {
+				console.log(error)
+			})
+		//*/
 	}
 
 	const OnUserLoggedIn = (user) => {
@@ -70,7 +99,11 @@ function App() {
 		cartillesService.retrieveTodayData(user)
 			.then(todayData => {
 				console.log("Hay datos para hoy?", todayData[0])
-				userData.setTodayData(todayData[0])
+				if(todayData[0] != undefined){
+					userData.setTodayData(todayData[0])
+				}
+				
+				navigate('/data')
 			})
 	}
 
@@ -89,14 +122,11 @@ function App() {
 			<div>
 				<Menu user={user} OnUserLoggedOut={OnUserLoggedOut}/>
 			</div>
-
 			<Routes>
-				<Route path="/data" element={<CartillaForm userData={userData}  OnCartillaSubmit={OnCartillaSubmit} navigate={navigate} user={user} />} />
-				<Route path="/goals" element={<GoalsForm  OnCartillaSubmit={OnCartillaSubmit} navigate={navigate} user={user} />} />
-				<Route path="/" element={<Login OnUserLoggedIn={OnUserLoggedIn} user={user} />} />
+				<Route path="/data" element={<CartillaForm userData={userData} OnCartillaSubmit={OnCartillaSubmit} navigate={navigate} user={userData.user} />} />
+				<Route path="/goals" element={<GoalsForm OnGoalsSubmit={OnGoalsSubmit} navigate={navigate} user={user} />} />
+				<Route path="/" element={<Login OnUserLoggedIn={OnUserLoggedIn} user={userData.user} />} />
 			</Routes>
-
-
 		</>
 	)
 }

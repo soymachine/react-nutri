@@ -21,7 +21,7 @@ function setValueTask(state, action){
 		}
 	}
 
-	console.log(`New value ${newValue} state:${state} action:${action}`)
+	//console.log(`New value ${newValue} state:${state} action:${action}`)
 
 	return newValue
 }
@@ -44,12 +44,12 @@ const useCounter = (initValue) => {
 
 	const addNumber = (e) => {
 		e.preventDefault()
-		console.log("add number")
+		//console.log("add number")
 		increase({type:'decrease'})
 	}
 
 	const changeNumber = (value) => {
-		console.log(`change value to:${value}`)
+		//console.log(`change value to:${value}`)
 		setValue({type:'change', value:value})
 	}
 

@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken')
 const nutriRouter = require('express').Router()
 const Cartilla = require('../models/cartilla')
 const Apat = require('../models/apat')
-const Exercici = require('../models/exercici')
-
 const Usuari = require('../models/usuari')
 const logger = require('../utils/logger')
 
@@ -25,35 +23,40 @@ const constructCartillaObj = (body, user) =>{
     proteines:body.esmorzar.proteines,  
     hidrats:body.esmorzar.hidrats,  
     fibra:body.esmorzar.fibra,  
+    greixos:body.esmorzar.greixos,  
+    lactics:body.esmorzar.lactics,  
   }
 
   const migMati = {
     proteines:body.migMati.proteines,  
     hidrats:body.migMati.hidrats,  
     fibra:body.migMati.fibra,  
+    greixos:body.migMati.greixos,  
+    lactics:body.migMati.lactics,  
   }
 
   const berenar = {
     proteines:body.berenar.proteines,  
     hidrats:body.berenar.hidrats,  
     fibra:body.berenar.fibra,  
+    greixos:body.berenar.greixos,  
+    lactics:body.berenar.lactics,  
   }
 
   const dinar = {
     proteines:body.dinar.proteines,  
     hidrats:body.dinar.hidrats,  
     fibra:body.dinar.fibra,  
+    greixos:body.dinar.greixos,  
+    lactics:body.dinar.lactics,  
   }
 
   const sopar = {
     proteines:body.sopar.proteines,  
     hidrats:body.sopar.hidrats,  
     fibra:body.sopar.fibra,  
-  }
-
-  const exercici = {
-    fet: body.exercici.fet,  
-    tipus: body.exercici.tipus,
+    greixos:body.sopar.greixos,  
+    lactics:body.sopar.lactics,  
   }
 
   const cartilla = {
@@ -66,8 +69,14 @@ const constructCartillaObj = (body, user) =>{
     berenar: berenar,
     date: body.date,
     pes: body.pes,
-    exercici:exercici,
+    forca:body.forca,
+    cardio:body.cardio,
     alcohol: body.alcohol,
+    xocolata: body.xocolata,
+    extresSalats: body.extresSalats,
+    dolcos: body.dolcos,
+    refrescos: body.refrescos,
+    verdura: body.verdura,
     user: user.id
   }
 
@@ -80,37 +89,40 @@ const constructCartillaClass = (body, user) =>{
       proteines:body.dinar.proteines,  
       hidrats:body.dinar.hidrats,  
       fibra:body.dinar.fibra,  
+      greixos:body.dinar.greixos,  
+      lactics:body.dinar.lactics,  
     })
 
     const sopar = new Apat({
       proteines:body.sopar.proteines,  
       hidrats:body.sopar.hidrats,  
       fibra:body.sopar.fibra,  
+      greixos:body.sopar.greixos,  
+      lactics:body.sopar.lactics,  
     })
 
     const esmorzar = new Apat({
       proteines:body.esmorzar.proteines,  
       hidrats:body.esmorzar.hidrats,  
       fibra:body.esmorzar.fibra,  
+      greixos:body.esmorzar.greixos,  
+      lactics:body.esmorzar.lactics,  
     })
 
     const migMati = new Apat({
       proteines:body.migMati.proteines,  
       hidrats:body.migMati.hidrats,  
       fibra:body.migMati.fibra,  
+      greixos:body.migMati.greixos,  
+      lactics:body.migMati.lactics,  
     })
 
     const berenar = new Apat({
       proteines:body.berenar.proteines,  
       hidrats:body.berenar.hidrats,  
       fibra:body.berenar.fibra,  
-    })
-
-    
-
-    const exercici = new Exercici({
-      fet: body.exercici.fet,  
-      tipus: body.exercici.tipus,
+      greixos:body.berenar.greixos,  
+      lactics:body.berenar.lactics,  
     })
 
     const cartilla = new Cartilla({
@@ -123,7 +135,13 @@ const constructCartillaClass = (body, user) =>{
       berenar: berenar,      
       date: body.date,
       pes: body.pes,
-      exercici:exercici,
+      xocolata: body.xocolata,
+      extresSalats: body.extresSalats,
+      refrescos: body.refrescos,
+      verdura: body.verdura,
+      dolcos: body.dolcos,
+      forca:body.forca,
+      cardio:body.cardio,
       alcohol: body.alcohol,
       user: user.id
     })
@@ -168,6 +186,7 @@ nutriRouter.get('/today', async (request, response) => {
         date:{$gte: start, $lt: end}
         }).populate('user', { username: 1, nom: 1 })
     
+    console.log(cartilles)
     response.json(cartilles)
 })
 
@@ -183,8 +202,6 @@ nutriRouter.get('/:id', async (request, response) => {
 
 // Actualiza la cartilla de una persona
 nutriRouter.put('/:id', async (request, response, next) => {
-    
-
     const body = request.body
     const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
     if (!decodedToken.id) {
@@ -192,10 +209,12 @@ nutriRouter.put('/:id', async (request, response, next) => {
     }
     const user = await Usuari.findById(decodedToken.id)
     const cartilla = constructCartillaObj(body, user)    
-    console.log(cartilla)
+    //console.log(cartilla)
+    console.log(`params id:${request.params.id}`)
     const cartillaUpdated = await Cartilla.findByIdAndUpdate({_id:request.params.id}, cartilla, {new:true});
-    console.log(cartillaUpdated)
+    //console.log(cartillaUpdated)
     response.json(cartillaUpdated)
+    //response.json({})
     /*
     //console.log(cartilla)
     */

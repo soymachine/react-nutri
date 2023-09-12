@@ -4,9 +4,9 @@ import { IconButton, TextField  } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 
 
-const NumberForm = forwardRef(function NumberForm(props, refs) {
+const ObjectiveNumberForm = forwardRef(function NumberForm(props, refs) {
 	let quantity = useQuantity(props.initValue)
-	//console.log(`quantity:${props.initValue} para ${props.title}`)
+
 	const getQuantity = () =>{
 		/*
 		console.log(`getQuantity:`)
@@ -38,7 +38,7 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 
 	return (
 		<>
-		<IconButton sx={{mt: 1, color: props.color}}  onClick={quantity.removeNumber} aria-label="delete">
+		<IconButton sx={{mt: -2, color: props.color}}  onClick={quantity.removeNumber} aria-label="delete">
 			<Remove />
 		</IconButton>
 		<TextField  
@@ -47,11 +47,14 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 				"& .MuiOutlinedInput-root": {
 				"& > fieldset": { borderColor: `${props.color}` },
 				},
-				border: { color: 'red' }, ml:1, mr:1, width: '12ch'
+				border: { color: 'red' }, ml:1, mr:1, width: '13ch',
+				"& .MuiFormHelperText-root": {fontSize:"1.3ch"}
 			}}
 		
-			id="outlined-basic" label={props.title} value={getQuantity()} onChange={handleValueChange} variant="outlined" />
-		<IconButton sx={{mt: 1, color: props.color}} onClick={quantity.addNumber} aria-label="delete">
+			id="outlined-basic" label={props.title} value={getQuantity()} onChange={handleValueChange} variant="outlined" 
+			helperText="(a la setmana)"
+			/>
+		<IconButton sx={{mt: -2, color: props.color}} onClick={quantity.addNumber} aria-label="delete">
 			<Add />
 		</IconButton>
 		</>
@@ -59,4 +62,4 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 
 });
 
-export default NumberForm
+export default ObjectiveNumberForm

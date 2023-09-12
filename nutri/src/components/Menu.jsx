@@ -25,9 +25,9 @@ function Menu(props) {
 
 	return (
 		<div>
-			<Link style={padding} to="/">home</Link>
-			<Link style={padding} to="/data">data</Link>
-			<Link style={padding} to="/goals">goals</Link>
+			<Link style={padding} to="/">Inici</Link>
+			<Link style={padding} to="/data">Dades</Link>
+			<Link style={padding} to="/goals">Objectius</Link>
 			{props.user === null ?
 				<></> :
 				logOutButton()

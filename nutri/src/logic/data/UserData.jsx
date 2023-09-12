@@ -12,14 +12,52 @@ class UserData{
     constructor(props) {
         this.user= ''
         this.todayData= {}
+        this.goalsData= {}
         this.isTodayDataSet = false
+        this.isGoalsSet = false
     }
 
     setTodayData = (todayData)=>{
+        console.log(`setTodayData: this.isTodayDataSet:${this.isTodayDataSet}`)
         console.error(todayData)
-        this.todayData = todayData
-        if(todayData !== undefined){
+        if(!this.isTodayDataSet){
             this.isTodayDataSet = true
+            this.todayData = todayData
+        }
+    }
+
+    setGoalsData = (goalsData) =>{
+        console.log(`setGoalsData: this.isGoalsSet:${this.isGoalsSet}`)
+        console.error(goalsData)
+        if(!this.isGoalsSet){
+            this.isGoalsSet = true
+            this.goalsData = goalsData
+        }
+    }
+
+    getGoalsData = (dataType, defaultValue = 0) => {
+        switch(dataType)
+        {
+            case "verdura":
+                return this.isGoalsSet? this.goalsData.verdura: defaultValue
+            case "fruita":
+                return this.isGoalsSet? this.goalsData.fruita: defaultValue
+            case "xocolata":
+                return this.isGoalsSet? this.goalsData.xocolata: defaultValue
+            case "dolcos":
+                return this.isGoalsSet? this.goalsData.dolcos: defaultValue
+            case "extresSalats":
+                return this.isGoalsSet? this.goalsData.extresSalats: defaultValue
+            case "alcohol":
+                return this.isGoalsSet? this.goalsData.alcohol: defaultValue
+            case "cardio":
+                return this.isGoalsSet? this.goalsData.cardio: defaultValue
+            case "forca":
+                return this.isGoalsSet? this.goalsData.forca: defaultValue
+            case "refrescos":
+                return this.isGoalsSet? this.goalsData.refrescos: defaultValue
+            case "pes":
+                return this.isGoalsSet? this.goalsData.pes: defaultValue
         }
     }
 
@@ -36,6 +74,8 @@ class UserData{
                 return this.isTodayDataSet? this.todayData.dolcos: defaultValue                
             case "xocolata":                
                 return this.isTodayDataSet? this.todayData.xocolata: defaultValue                
+            case "refrescos":                
+                return this.isTodayDataSet? this.todayData.refrescos: defaultValue                
             case "extresSalats":
                 return this.isTodayDataSet? this.todayData.extresSalats: defaultValue
             case "alcohol":
@@ -80,10 +120,10 @@ class UserData{
                     greixos: this.isTodayDataSet? this.todayData.berenar.greixos: defaultValue,
                     lactics: this.isTodayDataSet? this.todayData.berenar.lactics: defaultValue,
                 }
-            case "exercici-fet":
-                return this.isTodayDataSet? this.todayData.exercici.fet: false
-            case "exercici-tipus":
-                return this.isTodayDataSet? this.todayData.exercici.tipus: defaultValue
+            case "forca":
+                return this.isTodayDataSet? this.todayData.forca: false
+            case "cardio":
+                return this.isTodayDataSet? this.todayData.cardio: false
             case "data":
                 return this.isTodayDataSet? this.todayData.date: null
         }
