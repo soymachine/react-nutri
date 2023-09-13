@@ -41,28 +41,20 @@ const defaultTheme = createTheme();
 function Login(props) {
 	const navigate = useNavigate()
 	const [notification, setNotification] = useState(null)
-
-	console.log(`props.user:${props.user}`)
-	console.log(props)
+	const [remember, setRemember] = useState(false)
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		console.log({
-		  username: data.get('username'),
-		  password: data.get('password'),
-		});
-
 		let username = data.get('username')
 		let password = data.get('password')
-
+		
 		try {
 			const user = await loginService.login({
 				username, password,
 			})
 
-			cartillesService.setToken(user.token)
-			props.OnUserLoggedIn(user)
+			props.OnUserLoggedIn(user, remember)
 			setUsername('')
 			setPassword('')
 		} catch (exception) {
@@ -73,7 +65,10 @@ function Login(props) {
 		}
 	  };
 
-	
+	const handleChangeRemember = () => {
+		let newRemember = !remember
+		setRemember(newRemember)
+	}
 
 	const loginForm = () => (
 		<>
@@ -118,7 +113,8 @@ function Login(props) {
 						autoComplete="current-password"
 						/>
 						<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
+						id="remember"
+						control={<Checkbox checked={remember} onChange={handleChangeRemember} color="primary" />}
 						label="Remember me"
 						/>
 						<Button

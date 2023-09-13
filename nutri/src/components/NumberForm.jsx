@@ -3,6 +3,7 @@ import useQuantity from './customhooks/useQuantity'
 import { IconButton, TextField  } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 
+const regex = /^[0-9\b]+$/;
 
 const NumberForm = forwardRef(function NumberForm(props, refs) {
 	let quantity = useQuantity(props.initValue)
@@ -25,9 +26,12 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 	}
 
 	const handleValueChange = (event) => {
-		let newValue = (event.target.value)
-		console.log(`newValue:${newValue}`)
-		quantity.changeNumber(newValue)
+		if (event.target.value === "" || regex.test(event.target.value))
+		{
+			let newValue = (event.target.value)
+			console.log(`newValue:${newValue}`)
+			quantity.changeNumber(newValue)
+		}
 	}
 
 	useImperativeHandle(refs, () => {

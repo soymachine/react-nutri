@@ -73,8 +73,6 @@ const sendCartilla = async (cartillaObject, isNew, cartillaID) =>{
 	}
 }
 
-
-
 const createCartilla = async newObject => {
 	const config = {
 		headers: { Authorization: token },

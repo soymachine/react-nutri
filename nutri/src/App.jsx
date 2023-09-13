@@ -28,7 +28,7 @@ function App() {
 	
 	useEffect(() => {
 		if (userStorage.isUserInStorage()) {
-			const user = userStorage.getJSON()
+			const user = userStorage.getWithExpiry()
 			OnUserLoggedIn(user)
 		}else{
 			navigate('/')
@@ -43,8 +43,8 @@ function App() {
 			cartillaID = userData.todayData.id
 		}
 
-		console.log(cartillaObj)
-		console.log(`OnCartillaSubmit, cartillaID:${cartillaID} userData.isTodayDataSet:${userData.isTodayDataSet}`)
+		//console.log(cartillaObj)
+		//console.log(`OnCartillaSubmit, cartillaID:${cartillaID} userData.isTodayDataSet:${userData.isTodayDataSet}`)
 
 		// O creamos una nueva o actualizamos la actual
 		// Comentar esto para development que no se envie nada
@@ -52,7 +52,6 @@ function App() {
 		cartillesService.sendCartilla(cartillaObj, !userData.isTodayDataSet, cartillaID)
 			.then(cartillaReturned => {
 				// Mostrar algo de éxito aqui
-				console.log('Data updated correctly!')
 				// Agregar la info de todayData al objeto userData
 				userData.setTodayData(cartillaReturned)
 			})
@@ -66,11 +65,8 @@ function App() {
 
 		let goalID = null
 		if(userData.isGoalsSet){
-			goalID = userData.todayData.id
+			goalID = userData.goalsData.id
 		}
-
-		console.log(goalsObj)
-		console.log(`OnGoalsSubmit, cartillaID:${goalID} userData.isGoalsSet:${userData.isGoalsSet}`)
 
 		// O creamos una nueva o actualizamos la actual
 		// Comentar esto para development que no se envie nada
@@ -78,7 +74,6 @@ function App() {
 		goalsService.sendObjectives(goalsObj, !userData.isGoalsSet, goalID)
 			.then(goalsReturned => {
 				// Mostrar algo de éxito aqui
-				console.log('Data updated correctly!')
 				// Agregar la info de todayData al objeto userData
 				userData.setGoalsData(goalsReturned)
 			})
@@ -88,29 +83,39 @@ function App() {
 		//*/
 	}
 
-	const OnUserLoggedIn = (user) => {
+	const OnUserLoggedIn = (user, remember) => {
 		setUser(user)
 		userData.user = user
 		cartillesService.setToken(user.token)
-		userStorage.saveUser(user)
+		goalsService.setToken(user.token)
+		userStorage.saveUserWithExpirationTime(user, remember)
 		
 		// Pescar si este usuario tiene datos para el dia de hoy
 		//console.log(user)
 		cartillesService.retrieveTodayData(user)
 			.then(todayData => {
-				console.log("Hay datos para hoy?", todayData[0])
+				//console.log("Hay datos para hoy?", todayData[0])
 				if(todayData[0] != undefined){
 					userData.setTodayData(todayData[0])
 				}
 				
-				navigate('/data')
+				//console.log("retrieve user goals")
+				goalsService.retrieveUserGoalsData(user)
+				.then(goalsData =>{
+					if(goalsData[0] != undefined){
+						userData.setGoalsData(goalsData[0])
+					}
+
+					navigate('/data')
+				})
 			})
 	}
 
 	const OnUserLoggedOut = () => {
+		userData.onLoggedOut()
+		userStorage.removeUser()		
 		setUser(null)
 		navigate('/')
-		userStorage.removeUser()		
 	}
 
 	const OnClickLogOut = () => {

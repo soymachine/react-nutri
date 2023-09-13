@@ -17,9 +17,22 @@ class UserData{
         this.isGoalsSet = false
     }
 
+    onLoggedOut = () =>{
+        this.user= ''
+        this.todayData= {}
+        this.goalsData= {}
+        this.isTodayDataSet = false
+        this.isGoalsSet = false
+    }
+
+    hasCamp = (campNom)=>{
+		let result = this.user.camps.find(item => item == campNom)
+		let isUndefined = (result == undefined)
+		return !isUndefined
+	}
+
     setTodayData = (todayData)=>{
-        console.log(`setTodayData: this.isTodayDataSet:${this.isTodayDataSet}`)
-        console.error(todayData)
+        
         if(!this.isTodayDataSet){
             this.isTodayDataSet = true
             this.todayData = todayData
@@ -27,8 +40,7 @@ class UserData{
     }
 
     setGoalsData = (goalsData) =>{
-        console.log(`setGoalsData: this.isGoalsSet:${this.isGoalsSet}`)
-        console.error(goalsData)
+        
         if(!this.isGoalsSet){
             this.isGoalsSet = true
             this.goalsData = goalsData

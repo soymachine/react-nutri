@@ -19,7 +19,6 @@ const userData = UserData.getInstance()
 function CartillaForm(props) {
 	let navigate = props.navigate
 	//let userData = props.userData
-
 	let submitLabel = userData.isTodayDataSet? "Actualitzar": "Desar"
 
 	let fruita_init_value = userData.getTodayData("fruita")
@@ -31,8 +30,7 @@ function CartillaForm(props) {
 	let extresSalats_init_value = userData.getTodayData("extresSalats")
 	let forca_init_value = userData.getTodayData("forca")
 	let cardio_init_value = userData.getTodayData("cardio")
-
-	console.log(`fruita_init_value:${fruita_init_value}`)
+	let pes_init_value = userData.getTodayData("pes")
 
 	const fruitaNumberRef = useRef()	
 	const verduraNumberRef = useRef()	
@@ -41,6 +39,7 @@ function CartillaForm(props) {
 	const dolcosNumberRef = useRef()
 	const refrescosNumberRef = useRef()
 	const extresSalatsNumberRef = useRef()
+	const pesNumberRef = useRef()
 
 	const [hasData, setHasData] = useState(false)
 	const [pes, setPes] = useState(()=>{return userData.getTodayData("pes")})
@@ -57,8 +56,6 @@ function CartillaForm(props) {
 	const hook = () => {
 		// Si no hay usuario, entonces navegamos a otra página
 		if(props.user == null || props.user == "") {
-			console.log("Resturning to home for some reason:")
-			console.log(props.user)
 			returnToHome()
 		}
 
@@ -93,16 +90,13 @@ function CartillaForm(props) {
 		const xocolata = xocolataNumberRef.current.getQuantity()
 		const extresSalats = extresSalatsNumberRef.current.getQuantity()
 		const refrescos = refrescosNumberRef.current.getQuantity()
+		const pes = pesNumberRef.current.getQuantity()
 		//console.log(dinar)
 		
 		props.OnCartillaSubmit({
 			pes, fruita, dolcos, alcohol, date, esmorzar, migMati, dinar, berenar, sopar, forca, cardio, xocolata, verdura, extresSalats, refrescos
 		})
 		
-	}
-
-	const handlePesChange = (event) => {
-		setPes(event.target.value)
 	}
 
 	const returnToHome = () => {
@@ -132,9 +126,9 @@ function CartillaForm(props) {
 							justifyContent:"center",
 							marginTop:2
 					}}>
-						<NumberForm title={'Verdura'} ref={verduraNumberRef} initValue={verdura_init_value} color={greenColor}/> 
+						{userData.hasCamp("verdures")? <NumberForm title={'Verdura'} ref={verduraNumberRef} initValue={verdura_init_value} color={greenColor}/>: <div></div>} 
 						<Divider orientation="vertical" flexItem sx={{m:1}} />
-						<NumberForm title={'Fruita'} ref={fruitaNumberRef} initValue={fruita_init_value} color={greenColor}/> 
+						{userData.hasCamp("fruita")? <NumberForm title={'Fruita'} ref={fruitaNumberRef} initValue={fruita_init_value} color={greenColor}/>: <div></div>} 
 					</Box>
 					<Box
 						sx={{
@@ -142,39 +136,32 @@ function CartillaForm(props) {
 							flexDirection: 'row',
 							alignItems: 'center',
 							justifyContent:"center",
-							marginTop:2
+							marginTop:2,
+							marginBottom:2
 					}}>
-						<NumberForm title={'Xocolata negra'} ref={xocolataNumberRef} initValue={xocolata_init_value} color={redColor}/>
+						{userData.hasCamp("xocolata")? <NumberForm title={'Xocolata negra'} ref={xocolataNumberRef} initValue={xocolata_init_value} color={redColor}/>: <div></div>} 
 						<Divider orientation="vertical" flexItem sx={{m:1}} />
-						<NumberForm title={'Dolços'} ref={dolcosNumberRef} initValue={dolcos_init_value} color={redColor}/>
+						{userData.hasCamp("dolcos")? <NumberForm title={'Dolços'} ref={dolcosNumberRef} initValue={dolcos_init_value} color={redColor}/>: <div></div>} 
 						<Divider orientation="vertical" flexItem sx={{m:1}} />
-						<NumberForm title={'Extres salats'} ref={extresSalatsNumberRef} initValue={extresSalats_init_value} color={redColor}/>
+						{userData.hasCamp("extresSalats")? <NumberForm title={'Extres salats'} ref={extresSalatsNumberRef} initValue={extresSalats_init_value} color={redColor}/>: <div></div>} 
 						<Divider orientation="vertical" flexItem sx={{m:1}} />
-						<NumberForm title={'Alcohol'} ref={alcoholNumberRef} initValue={alcohol_init_value} color={redColor}/>
+						{userData.hasCamp("alcohol")? <NumberForm title={'Alcohol'} ref={alcoholNumberRef} initValue={alcohol_init_value} color={redColor}/>: <div></div>} 
 						<Divider orientation="vertical" flexItem sx={{m:1}} />
-						<NumberForm title={'Refrescos'} ref={refrescosNumberRef} initValue={refrescos_init_value} color={redColor}/>
+						{userData.hasCamp("refrescos")? <NumberForm title={'Refrescos'} ref={refrescosNumberRef} initValue={refrescos_init_value} color={redColor}/>: <div></div>} 
 					</Box>
+					<Divider maxwidth="md">
+						<Chip label="Pes"/>
+					</Divider>
 					<Box
 						sx={{
 							display: 'flex',
-							flexDirection: 'column',
+							flexDirection: 'row',
 							alignItems: 'center',
 							justifyContent:"center",
-							marginTop:2
+							marginTop:2,
+							marginBottom:2
 					}}>
-						<Container component="main" maxwidth="md">
-						<Divider maxwidth="md">
-							<Chip label="Pes"/>
-						</Divider>
-						<FormControl sx={{ m: 1, width: '12ch' }} variant="outlined">
-							<OutlinedInput
-								value={pes} onChange={handlePesChange}
-								id="outlined-adornment-weight"
-								endAdornment={<InputAdornment position="end">kg</InputAdornment>}								
-							/>
-						</FormControl>
-						</Container>
-						
+						<NumberForm ref={pesNumberRef} initValue={pes_init_value} title={'Kg.'}/>						
 					</Box>
 					<Divider maxwidth="md" sx={{mt:1}}>
 							<Chip label="Activitat física"/>

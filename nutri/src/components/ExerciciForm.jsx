@@ -3,10 +3,11 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { Box } from '@mui/material';
+import UserData from '../logic/data/UserData'
+
+const userData = UserData.getInstance()
 
 function ExerciciForm({setForca, setCardio, forca, cardio }) {
-	console.log( `forca: ${forca}`)
-	console.log( `cardio: ${cardio}`)
 	const [checkedForca, setCheckedForca] = useState(forca)
 	const [checkedCardio, setCheckedCardio] = useState(cardio)
 	
@@ -27,9 +28,6 @@ function ExerciciForm({setForca, setCardio, forca, cardio }) {
 		{ label: 'Força', value: 'força' },
 	]
 
-	const labelForca = { inputProps: { 'aria-label': "Força" } };
-	const labelCardio = { inputProps: { 'aria-label': "Cardio" } };
-
 	return (
 		
 		<Box
@@ -41,8 +39,8 @@ function ExerciciForm({setForca, setCardio, forca, cardio }) {
 				marginTop:2
 		}}>
 			<FormGroup>
-				<FormControlLabel control={<Checkbox checked={checkedForca} onChange={handleChangeForca} inputProps={{ 'aria-label': 'controlled' }} />} label="Força" />
-				<FormControlLabel control={<Checkbox checked={checkedCardio} onChange={handleChangeCardio} inputProps={{ 'aria-label': 'controlled' }} />} label="Cardio" />
+			{userData.hasCamp("forca")?<FormControlLabel control={<Checkbox checked={checkedForca} onChange={handleChangeForca} inputProps={{ 'aria-label': 'controlled' }} />} label="Força" />: <div></div>} 
+			{userData.hasCamp("cardio")?<FormControlLabel control={<Checkbox checked={checkedCardio} onChange={handleChangeCardio} inputProps={{ 'aria-label': 'controlled' }} />} label="Cardio" />: <div></div>} 
 			</FormGroup>
 		</Box>
 		

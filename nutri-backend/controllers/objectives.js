@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const nutriRouter = require('express').Router()
+const objectivesRouter = require('express').Router()
 const Objective = require('../models/objective')
 const Usuari = require('../models/usuari')
 const logger = require('../utils/logger')
@@ -60,7 +60,7 @@ const constructObjectiveClass = (body, user) =>{
  * OBJECTIVE
  * 
  **/
-nutriRouter.get('/', async (request, response) => {
+objectivesRouter.get('/', async (request, response) => {
   // Devolver todOs las OBJECTIVES del usuario id
   let user_id = request.query.user_id
   
@@ -71,7 +71,7 @@ nutriRouter.get('/', async (request, response) => {
 
 
 // Actualiza los objetivos de una persona
-nutriRouter.put('/:id', async (request, response, next) => {
+objectivesRouter.put('/:id', async (request, response, next) => {
     const body = request.body
     const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
     if (!decodedToken.id) {
@@ -81,7 +81,7 @@ nutriRouter.put('/:id', async (request, response, next) => {
     const objective = constructObjectiveObj(body, user)    
     //console.log(cartilla)
     console.log(`params id:${request.params.id}`)
-    const objectiveUpdated = await Cartilla.findByIdAndUpdate({_id:request.params.id}, objective, {new:true});
+    const objectiveUpdated = await Objective.findByIdAndUpdate({_id:request.params.id}, objective, {new:true});
     //console.log(cartillaUpdated)
     response.json(objectiveUpdated)
     //response.json({})
@@ -90,7 +90,7 @@ nutriRouter.put('/:id', async (request, response, next) => {
     */
 })
 
-nutriRouter.post('/', async (request, response) => {
+objectivesRouter.post('/', async (request, response) => {
     console.log("POST DE /")
     const body = request.body
     const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
@@ -106,8 +106,8 @@ nutriRouter.post('/', async (request, response) => {
     response.json(savedObjective)
 })
 
-nutriRouter.delete('/:id', (request, response, next) => {
+objectivesRouter.delete('/:id', (request, response, next) => {
   // TODO
 })
 
-module.exports = nutriRouter
+module.exports = objectivesRouter

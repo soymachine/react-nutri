@@ -14,7 +14,7 @@ const getAll = () => {
 	return request.then(response => response.data)
 }
 
-const retrieveTodayData = async user => {
+const retrieveUserGoalsData = async user => {
 
 	// Pescar si este usuario tiene datos para el dia de hoy
 	const config = {
@@ -26,7 +26,17 @@ const retrieveTodayData = async user => {
 			user_id: user.id
 		}
 	}
-	const response = await axios.get(`${baseUrl}/today`, query)
+	const response = await axios.get(baseUrl, query)
+	return response.data
+}
+
+const updateObjectives = async (cartillaObj, cartillaID) => {
+	const config = {
+		headers: { Authorization: token },
+	}
+	console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
+	console.log(cartillaObj)
+	const response = await axios.put(`${baseUrl}/${cartillaID}`, cartillaObj, config)
 	return response.data
 }
 
@@ -48,14 +58,4 @@ const createObjectives = async newObject => {
 	return response.data
 }
 
-const updateObjectives = async (cartillaObj, cartillaID) => {
-	const config = {
-		headers: { Authorization: token },
-	}
-	console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
-	console.log(cartillaObj)
-	const response = await axios.put(`${baseUrl}/${cartillaID}`, cartillaObj, config)
-	return response.data
-}
-
-export default { getAll, createObjectives, updateObjectives, sendCartilla, setToken }
+export default { getAll, createObjectives, updateObjectives, sendObjectives, retrieveUserGoalsData, setToken }

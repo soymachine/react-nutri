@@ -6,7 +6,8 @@ const usuariSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true
-  }, 
+  },
+  camps:Array, 
   nom:String,
   passwordHash: String,
   cartilles: [

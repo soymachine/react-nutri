@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { Chip, TextField, Divider } from '@mui/material';
 
 const defaultTheme = createTheme();
-
+const regex = /^[0-9\b]+$/;
 
 function ApatForm({ title, setModel, model }) {
 
@@ -29,33 +29,50 @@ function ApatForm({ title, setModel, model }) {
 	const [lactics, setLactics] = useState(model.lactics)
 
 	const handleProteinesChange = (event) => {
-		let newProteines = (event.target.value)
-		setProteines(newProteines)
-		setModel({ ...model, proteines:newProteines })
+		
+		if (event.target.value === "" || regex.test(event.target.value)) 
+		{
+			let newProteines = (event.target.value)
+			setProteines(newProteines)
+			setModel({ ...model, proteines:newProteines })
+		}
 	}
 
 	const handleHidratsChange = (event) => {
-		let newHidrats = (event.target.value)
-		setHidrats(newHidrats)
-		setModel({ ...model, hidrats:newHidrats })
+		if (event.target.value === "" || regex.test(event.target.value)) 
+		{
+			let newHidrats = (event.target.value)
+			setHidrats(newHidrats)
+			setModel({ ...model, hidrats:newHidrats })
+		}
+		
 	}
 
 	const handleFibraChange = (event) => {
-		let newFibra = (event.target.value)
-		setFibra(newFibra)
-		setModel({ ...model, fibra:newFibra })
+		if (event.target.value === "" || regex.test(event.target.value))
+		{
+			let newFibra = (event.target.value)
+			setFibra(newFibra)
+			setModel({ ...model, fibra:newFibra })
+		}
 	}
 
 	const handleGreixosChange = (event) => {
-		let newGreix = (event.target.value)
-		setGreixos(newGreix)
-		setModel({ ...model, greixos:newGreix })
+		if (event.target.value === "" || regex.test(event.target.value))
+		{
+			let newGreix = (event.target.value)
+			setGreixos(newGreix)
+			setModel({ ...model, greixos:newGreix })
+		}
 	}
 
 	const handleLacticsChange = (event) => {
-		let newLactics = (event.target.value)
-		setLactics(newLactics)
-		setModel({ ...model, lactics:newLactics })
+		if (event.target.value === "" || regex.test(event.target.value))
+		{
+			let newLactics = (event.target.value)
+			setLactics(newLactics)
+			setModel({ ...model, lactics:newLactics })
+		}
 	}
 
 	return (
@@ -76,7 +93,7 @@ function ApatForm({ title, setModel, model }) {
 					}}>
 						<TextField
 							sx = {{margin:1}}
-							
+							type="text"
 							id="outlined-controlled"
 							label="Proteines"
 							value={proteines}

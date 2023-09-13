@@ -100,9 +100,9 @@ function GoalsForm(props) {
 						justifyContent:"center",
 						marginTop:2
 						}}>
-					<ObjectiveNumberForm ref={verduraNumberRef} initValue={verdura_init_value} title={'Verdura'} color={greenColor} />
+					{userData.hasCamp("verdures")? <ObjectiveNumberForm ref={verduraNumberRef} initValue={verdura_init_value} title={'Verdura'} color={greenColor} />: <div></div>} 
 					<Divider orientation="vertical" flexItem sx={{m:1}} />
-					<ObjectiveNumberForm ref={fruitaNumberRef} initValue={fruita_init_value} title={'Fruita'} color={greenColor}/>
+					{userData.hasCamp("fruita")? <ObjectiveNumberForm ref={fruitaNumberRef} initValue={fruita_init_value} title={'Fruita'} color={greenColor}/>: <div></div>} 
 				</Box>
 				<Box
 					sx={{
@@ -112,15 +112,15 @@ function GoalsForm(props) {
 						justifyContent:"center",
 						marginTop:2
 						}}>
-					<ObjectiveNumberForm ref={xocolataNumberRef} initValue={xocolata_init_value} title={'Xocolata'} color={redColor}/>
+					{userData.hasCamp("xocolata")? <ObjectiveNumberForm ref={xocolataNumberRef} initValue={xocolata_init_value} title={'Xocolata'} color={redColor}/>: <div></div>} 
 					<Divider orientation="vertical" flexItem sx={{m:1}} />
-					<ObjectiveNumberForm ref={dolcosNumberRef} initValue={dolcos_init_value} title={'Dolços'} color={redColor}/>
+					{userData.hasCamp("dolcos")? <ObjectiveNumberForm ref={dolcosNumberRef} initValue={dolcos_init_value} title={'Dolços'} color={redColor}/>: <div></div>} 
 					<Divider orientation="vertical" flexItem sx={{m:1}} />
-					<ObjectiveNumberForm ref={extresSalatsNumberRef} initValue={extresSalats_init_value} title={'Extres Salats'} color={redColor}/>
+					{userData.hasCamp("extresSalats")? <ObjectiveNumberForm ref={extresSalatsNumberRef} initValue={extresSalats_init_value} title={'Extres Salats'} color={redColor}/>: <div></div>} 
 					<Divider orientation="vertical" flexItem sx={{m:1}} />
-					<ObjectiveNumberForm ref={alcoholNumberRef} initValue={alcohol_init_value} title={'Alcohol'} color={redColor}/>
+					{userData.hasCamp("alcohol")? <ObjectiveNumberForm ref={alcoholNumberRef} initValue={alcohol_init_value} title={'Alcohol'} color={redColor}/>: <div></div>} 
 					<Divider orientation="vertical" flexItem sx={{m:1}} />
-					<ObjectiveNumberForm ref={refrescosNumberRef} initValue={refrescos_init_value} title={'Refrescos'} color={redColor}/>
+					{userData.hasCamp("refrescos")? <ObjectiveNumberForm ref={refrescosNumberRef} initValue={refrescos_init_value} title={'Refrescos'} color={redColor}/>: <div></div>} 
 				</Box>
 				<Divider maxwidth="md" sx={{mt:2}}>
 					<Chip label="Exercici físic"/>
@@ -133,9 +133,9 @@ function GoalsForm(props) {
 						justifyContent:"center",
 						marginTop:2
 						}}>
-					<ObjectiveNumberForm ref={forcaNumberRef} initValue={forca_init_value} title={'Força'} color={yellowColor}/>
+					{userData.hasCamp("forca")?<ObjectiveNumberForm ref={forcaNumberRef} initValue={forca_init_value} title={'Força'} color={yellowColor}/>: <div></div>} 
 					<Divider orientation="vertical" flexItem sx={{m:1}} />
-					<ObjectiveNumberForm ref={cardioNumberRef} initValue={cardio_init_value} title={'Cardio'} color={yellowColor}/>
+					{userData.hasCamp("cardio")?<ObjectiveNumberForm ref={cardioNumberRef} initValue={cardio_init_value} title={'Cardio'} color={yellowColor}/>: <div></div>} 
 				</Box>
 				<Divider maxwidth="md" sx={{mt:2}}>
 					<Chip label="Altres"/>
@@ -149,7 +149,8 @@ function GoalsForm(props) {
 						marginTop:2,
 						mb:2
 						}}>
-					<NumberForm ref={pesNumberRef} initValue={forca_init_value} title={'Pes'}/>
+					<NumberForm ref={pesNumberRef} initValue={pes_init_value} title={'Pes'}/>
+					
 				</Box>
 					<div>
 						<button type="submit">{submitLabel}</button>
