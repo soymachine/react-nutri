@@ -186,7 +186,7 @@ nutriRouter.get('/today', async (request, response) => {
         date:{$gte: start, $lt: end}
         }).populate('user', { username: 1, nom: 1 })
     
-    console.log(cartilles)
+    // console.log(cartilles)
     response.json(cartilles)
 })
 
@@ -198,6 +198,34 @@ nutriRouter.get('/:id', async (request, response) => {
     const cartilla = await Cartilla.find({user:id})
     response.json(cartilla)
     
+})
+
+nutriRouter.get('/date/:dateID', async (request, response) => {
+    // Devolver todas las cartillas del usuario id
+    let id = request.params.dateID
+    let user_id = request.query.user_id
+    let today = new Date(id)
+    console.log(typeof(today))
+    let day = zeroPad(today.getDate(), 2)
+    let month = zeroPad(today.getUTCMonth() +1, 2) 
+    let year = today.getFullYear()
+
+
+    // inicio del dia de hoy
+    let start = new Date(`${year}-${month}-${day}T00:00:00.000Z`)
+    // final del dia de hoy
+    let end = new Date(`${year}-${month}-${day}T23:59:00.000Z`)
+
+    console.log(`get data for a start:${start} and end:${end}`)
+  
+    const cartilles = await Cartilla.find({
+      user:user_id, 
+      date:{$gte: start, $lt: end}
+      }).populate('user', { username: 1, nom: 1 })
+  
+    console.log(cartilles)
+    response.json(cartilles)
+  
 })
 
 // Actualiza la cartilla de una persona

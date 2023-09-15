@@ -39,6 +39,12 @@ class UserData{
         }
     }
 
+    setBlankData = (todayData)=>{
+        
+        this.isTodayDataSet = false
+        this.todayData = {}
+    }
+
     setGoalsData = (goalsData) =>{
         
         if(!this.isGoalsSet){

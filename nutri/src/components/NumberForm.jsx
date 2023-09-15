@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle } from 'react'
+import { forwardRef, useEffect, useImperativeHandle } from 'react'
 import useQuantity from './customhooks/useQuantity'
 import { IconButton, TextField  } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
@@ -7,14 +7,14 @@ const regex = /^[0-9\b]+$/;
 
 const NumberForm = forwardRef(function NumberForm(props, refs) {
 	let quantity = useQuantity(props.initValue)
-	//console.log(`quantity:${props.initValue} para ${props.title}`)
+	// console.log(`quantity:${props.initValue} para ${props.title}`)
 	const getQuantity = () =>{
 		/*
 		console.log(`getQuantity:`)
 		console.log(`quantity.value:${quantity.value}`)
 		console.log(`props.initValue:${props.initValue}`)
 		console.log(`--------`)
-		*/
+		//*/
 		if(quantity.value == undefined)
 		{
 			return props.initValue
@@ -22,8 +22,13 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 		{ 
 			return quantity.value
 		}
-		
 	}
+
+	const hook = () => {
+		quantity.changeNumber(props.initValue)
+	}
+
+	useEffect(hook, [props.initValue])
 
 	const handleValueChange = (event) => {
 		if (event.target.value === "" || regex.test(event.target.value))
@@ -42,7 +47,7 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 
 	return (
 		<>
-		<IconButton sx={{mt: 1, color: props.color}}  onClick={quantity.removeNumber} aria-label="delete">
+		<IconButton sx={{mt: 1, color: props.color}} onClick={quantity.removeNumber} aria-label="delete">
 			<Remove />
 		</IconButton>
 		<TextField  

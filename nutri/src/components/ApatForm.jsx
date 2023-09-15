@@ -10,7 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Chip, TextField, Divider } from '@mui/material';
 
 const defaultTheme = createTheme();
@@ -27,6 +27,17 @@ function ApatForm({ title, setModel, model }) {
 	const [fibra, setFibra] = useState(model.fibra)
 	const [greixos, setGreixos] = useState(model.greixos)
 	const [lactics, setLactics] = useState(model.lactics)
+
+	const hook = () => {
+		console.log(`Hook en ApatForm model.proteines:${model.proteines} title:${title}`)
+		setProteines(model.proteines)
+		setHidrats(model.hidrats)
+		setFibra(model.fibra)
+		setGreixos(model.greixos)
+		setLactics(model.lactics)
+	}
+
+	useEffect(hook, [model])
 
 	const handleProteinesChange = (event) => {
 		
@@ -45,7 +56,6 @@ function ApatForm({ title, setModel, model }) {
 			setHidrats(newHidrats)
 			setModel({ ...model, hidrats:newHidrats })
 		}
-		
 	}
 
 	const handleFibraChange = (event) => {

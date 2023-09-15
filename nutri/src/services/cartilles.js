@@ -30,37 +30,20 @@ const retrieveTodayData = async user => {
 	return response.data
 }
 
-const validateCartilla = cartillaObj => {
+const retrieveDateData = async (user, date) => {
 
-	cartillaObj.dinar.fibra = parseFloat(cartillaObj.dinar.fibra)
-	cartillaObj.dinar.hidrats = parseFloat(cartillaObj.dinar.hidrats)
-	cartillaObj.dinar.proteines = parseFloat(cartillaObj.dinar.proteines)
-	cartillaObj.dinar.greixos = parseFloat(cartillaObj.dinar.greixos)
-	cartillaObj.dinar.lactics = parseFloat(cartillaObj.dinar.lactics)
+	// Pescar si este usuario tiene datos para el dia de hoy
+	const config = {
+		headers: { Authorization: token },
+	}
 
-	cartillaObj.sopar.fibra = parseFloat(cartillaObj.sopar.fibra)
-	cartillaObj.sopar.hidrats = parseFloat(cartillaObj.sopar.hidrats)
-	cartillaObj.sopar.proteines = parseFloat(cartillaObj.sopar.proteines)
-	cartillaObj.sopar.greixos = parseFloat(cartillaObj.sopar.greixos)
-	cartillaObj.sopar.lactics = parseFloat(cartillaObj.sopar.lactics)
-
-	cartillaObj.esmorzar.fibra = parseFloat(cartillaObj.esmorzar.fibra)
-	cartillaObj.esmorzar.hidrats = parseFloat(cartillaObj.esmorzar.hidrats)
-	cartillaObj.esmorzar.proteines = parseFloat(cartillaObj.esmorzar.proteines)
-	cartillaObj.esmorzar.greixos = parseFloat(cartillaObj.esmorzar.greixos)
-	cartillaObj.esmorzar.lactics = parseFloat(cartillaObj.esmorzar.lactics)
-
-	cartillaObj.migMati.fibra = parseFloat(cartillaObj.migMati.fibra)
-	cartillaObj.migMati.hidrats = parseFloat(cartillaObj.migMati.hidrats)
-	cartillaObj.migMati.proteines = parseFloat(cartillaObj.migMati.proteines)
-	cartillaObj.migMati.greixos = parseFloat(cartillaObj.migMati.greixos)
-	cartillaObj.migMati.lactics = parseFloat(cartillaObj.migMati.lactics)
-
-	cartillaObj.berenar.fibra = parseFloat(cartillaObj.berenar.fibra)
-	cartillaObj.berenar.hidrats = parseFloat(cartillaObj.berenar.hidrats)
-	cartillaObj.berenar.proteines = parseFloat(cartillaObj.berenar.proteines)
-	cartillaObj.berenar.greixos = parseFloat(cartillaObj.berenar.greixos)
-	cartillaObj.berenar.lactics = parseFloat(cartillaObj.berenar.lactics)
+	const query = {
+		params: {
+			user_id: user.id
+		}
+	}
+	const response = await axios.get(`${baseUrl}/date/${date.toDate()}`, query)
+	return response.data
 }
 
 const sendCartilla = async (cartillaObject, isNew, cartillaID) =>{
@@ -101,4 +84,39 @@ const update = (id, newObject) => {
 	return request.then(response => response.data)
 }
 
-export default { getAll, createCartilla, updateCartilla, sendCartilla, update, deleteEntry, setToken, validateCartilla, retrieveTodayData }
+
+const validateCartilla = cartillaObj => {
+
+	cartillaObj.dinar.fibra = parseFloat(cartillaObj.dinar.fibra)
+	cartillaObj.dinar.hidrats = parseFloat(cartillaObj.dinar.hidrats)
+	cartillaObj.dinar.proteines = parseFloat(cartillaObj.dinar.proteines)
+	cartillaObj.dinar.greixos = parseFloat(cartillaObj.dinar.greixos)
+	cartillaObj.dinar.lactics = parseFloat(cartillaObj.dinar.lactics)
+
+	cartillaObj.sopar.fibra = parseFloat(cartillaObj.sopar.fibra)
+	cartillaObj.sopar.hidrats = parseFloat(cartillaObj.sopar.hidrats)
+	cartillaObj.sopar.proteines = parseFloat(cartillaObj.sopar.proteines)
+	cartillaObj.sopar.greixos = parseFloat(cartillaObj.sopar.greixos)
+	cartillaObj.sopar.lactics = parseFloat(cartillaObj.sopar.lactics)
+
+	cartillaObj.esmorzar.fibra = parseFloat(cartillaObj.esmorzar.fibra)
+	cartillaObj.esmorzar.hidrats = parseFloat(cartillaObj.esmorzar.hidrats)
+	cartillaObj.esmorzar.proteines = parseFloat(cartillaObj.esmorzar.proteines)
+	cartillaObj.esmorzar.greixos = parseFloat(cartillaObj.esmorzar.greixos)
+	cartillaObj.esmorzar.lactics = parseFloat(cartillaObj.esmorzar.lactics)
+
+	cartillaObj.migMati.fibra = parseFloat(cartillaObj.migMati.fibra)
+	cartillaObj.migMati.hidrats = parseFloat(cartillaObj.migMati.hidrats)
+	cartillaObj.migMati.proteines = parseFloat(cartillaObj.migMati.proteines)
+	cartillaObj.migMati.greixos = parseFloat(cartillaObj.migMati.greixos)
+	cartillaObj.migMati.lactics = parseFloat(cartillaObj.migMati.lactics)
+
+	cartillaObj.berenar.fibra = parseFloat(cartillaObj.berenar.fibra)
+	cartillaObj.berenar.hidrats = parseFloat(cartillaObj.berenar.hidrats)
+	cartillaObj.berenar.proteines = parseFloat(cartillaObj.berenar.proteines)
+	cartillaObj.berenar.greixos = parseFloat(cartillaObj.berenar.greixos)
+	cartillaObj.berenar.lactics = parseFloat(cartillaObj.berenar.lactics)
+}
+
+
+export default { getAll, createCartilla, updateCartilla, sendCartilla, update, deleteEntry, setToken, validateCartilla, retrieveTodayData, retrieveDateData }

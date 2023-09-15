@@ -25,6 +25,7 @@ const userStorage = UserStorage.getInstance()
 function App() {
 	const navigate = useNavigate()
 	const [user, setUser] = useState(null)
+	const [responseFromServer, setResponseFromServer] = useState(false)
 	
 	useEffect(() => {
 		if (userStorage.isUserInStorage()) {
@@ -35,9 +36,27 @@ function App() {
 		}
 	}, [])
 
+	const OnCartillaNewDataSelected = (newDate)=>{
+		console.log(newDate)
+
+		cartillesService.retrieveDateData(userData.user, newDate)
+		.then( cartillaReturned =>{
+			if(cartillaReturned[0] != undefined){
+				userData.isTodayDataSet = false
+				userData.setTodayData(cartillaReturned[0])
+				console.log("Hay datos para esta fecha")
+				navigate('/data')
+			}else{
+				console.log("NO Hay datos para esta fecha")
+				userData.isTodayDataSet = false
+				userData.setBlankData()
+			}
+		})
+	}
+
 	const OnCartillaSubmit = (cartillaObj) => {
 		cartillesService.validateCartilla(cartillaObj)
-
+		setResponseFromServer(false)
 		let cartillaID = null
 		if(userData.isTodayDataSet){
 			cartillaID = userData.todayData.id
@@ -57,12 +76,15 @@ function App() {
 			})
 			.catch(error => {
 				console.log(error)
+			}).finally(()=>{
+				setResponseFromServer(true)
 			})
 		//*/
 	}
 
 	const OnGoalsSubmit = (goalsObj) => {
-
+		console.log("[App] OnGoalsSubmit")
+		setResponseFromServer(false)
 		let goalID = null
 		if(userData.isGoalsSet){
 			goalID = userData.goalsData.id
@@ -75,10 +97,14 @@ function App() {
 			.then(goalsReturned => {
 				// Mostrar algo de éxito aqui
 				// Agregar la info de todayData al objeto userData
+				console.log(goalsReturned)
 				userData.setGoalsData(goalsReturned)
 			})
 			.catch(error => {
 				console.log(error)
+				
+			}).finally(()=>{
+				setResponseFromServer(true)
 			})
 		//*/
 	}
@@ -92,7 +118,7 @@ function App() {
 		
 		// Pescar si este usuario tiene datos para el dia de hoy
 		//console.log(user)
-		cartillesService.retrieveTodayData(user)
+		cartillesService.retrieveTodayData(userData.user)
 			.then(todayData => {
 				//console.log("Hay datos para hoy?", todayData[0])
 				if(todayData[0] != undefined){
@@ -128,8 +154,8 @@ function App() {
 				<Menu user={user} OnUserLoggedOut={OnUserLoggedOut}/>
 			</div>
 			<Routes>
-				<Route path="/data" element={<CartillaForm userData={userData} OnCartillaSubmit={OnCartillaSubmit} navigate={navigate} user={userData.user} />} />
-				<Route path="/goals" element={<GoalsForm OnGoalsSubmit={OnGoalsSubmit} navigate={navigate} user={user} />} />
+				<Route path="/data" element={<CartillaForm OnCartillaNewDataSelected={OnCartillaNewDataSelected} responseFromServer={responseFromServer} userData={userData} OnCartillaSubmit={OnCartillaSubmit} navigate={navigate} user={userData.user} />} />
+				<Route path="/goals" element={<GoalsForm responseFromServer={responseFromServer} OnGoalsSubmit={OnGoalsSubmit} navigate={navigate} user={user} />} />
 				<Route path="/" element={<Login OnUserLoggedIn={OnUserLoggedIn} user={userData.user} />} />
 			</Routes>
 		</>

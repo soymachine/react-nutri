@@ -30,7 +30,7 @@ const ObjectiveNumberForm = forwardRef(function NumberForm(props, refs) {
 		if (event.target.value === "" || regex.test(event.target.value))
 		{
 			let newValue = (event.target.value)
-			console.log(`newValue:${newValue}`)
+			//console.log(`newValue:${newValue}`)
 			quantity.changeNumber(newValue)
 		}
 	}

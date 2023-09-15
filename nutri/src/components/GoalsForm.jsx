@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import ObjectiveNumberForm from './ObjectiveNumberForm'
 import NumberForm from './NumberForm'
-import { Box, Chip, Divider, TextField } from '@mui/material'
+import { Box, Chip, Divider, TextField, Alert, AlertTitle } from '@mui/material'
 import UserData from '../logic/data/UserData'
+import CustomBackdrop from './helpers/CustomBackdrop'
 
 let greenColor = '#96C291'
 let yellowColor = '#FFBA86'
@@ -38,6 +39,9 @@ function GoalsForm(props) {
 	const cardioNumberRef = useRef()
 	
 	const [user, setUser] = useState(props.user)
+	const [open, setOpen] = useState(true);
+	const [openBackdrop, setOpenBackdrop] = useState(false)
+	
 
 	const hook = () => {
 		// Si no hay usuario, entonces navegamos a otra página
@@ -48,35 +52,32 @@ function GoalsForm(props) {
 
 	useEffect(hook, [])
 
+	const handleCloseBackdrop = () => {
+		setOpenBackdrop(false);
+	};
+
+	if(props.responseFromServer) setTimeout(handleCloseBackdrop, 3000);
+
 	const OnGoalsSubmit = (event) => {
 		event.preventDefault()
+		setOpenBackdrop(true)	
 
-		const fruita = fruitaNumberRef.current.getQuantity()
-		const alcohol = alcoholNumberRef.current.getQuantity()
-		const dolcos = dolcosNumberRef.current.getQuantity()
-		const verdura = verduraNumberRef.current.getQuantity()
-		const xocolata = xocolataNumberRef.current.getQuantity()
-		const extresSalats = extresSalatsNumberRef.current.getQuantity()
-		const refrescos = refrescosNumberRef.current.getQuantity()
-		const forca = forcaNumberRef.current.getQuantity()
-		const cardio = cardioNumberRef.current.getQuantity()
 		const pes = pesNumberRef.current.getQuantity()
-
-		props.OnGoalsSubmit({
-			fruita, verdura, xocolata, dolcos, extresSalats, alcohol, refrescos, forca, cardio, pes
-		})
-	}
-
-	const handleFruitaChange = (event) => {
-		setFruita(event.target.value)
-	}
-
-	const handlePesChange = (event) => {
-		setPes(event.target.value)
-	}
-
-	const handleAlcoholChange = (event) => {
-		setAlcohol(event.target.value)
+		const sendObject = {}
+		sendObject["pes"] = pes
+		
+		userData.hasCamp("fruita")? sendObject["fruita"] = fruitaNumberRef.current.getQuantity():null
+		userData.hasCamp("dolcos")? sendObject["dolcos"] = dolcosNumberRef.current.getQuantity():null
+		userData.hasCamp("alcohol")? sendObject["alcohol"] = alcoholNumberRef.current.getQuantity():null
+		userData.hasCamp("forca")? sendObject["forca"] = forcaNumberRef.current.getQuantity():null
+		userData.hasCamp("cardio")? sendObject["cardio"] = cardioNumberRef.current.getQuantity():null
+		userData.hasCamp("xocolata")? sendObject["xocolata"] = xocolataNumberRef.current.getQuantity():null
+		userData.hasCamp("verdura")? sendObject["verdura"] = verduraNumberRef.current.getQuantity():null
+		userData.hasCamp("extresSalats")? sendObject["extresSalats"] = extresSalatsNumberRef.current.getQuantity():null
+		userData.hasCamp("refrescos")? sendObject["refrescos"] = refrescosNumberRef.current.getQuantity():null
+		//console.log("OnGoalsSubmit")
+		//console.log(sendObject)
+		props.OnGoalsSubmit(sendObject)
 	}
 
 	const returnToHome = () => {
@@ -85,6 +86,7 @@ function GoalsForm(props) {
 
 	const plantillaForm = () => (
 		<>
+			<CustomBackdrop openBackdrop={openBackdrop} responseFromServer={props.responseFromServer}></CustomBackdrop>
 			<div>Usuari: {user.username}</div>
 			<h1>Objectius</h1>
 			<div>
@@ -100,7 +102,7 @@ function GoalsForm(props) {
 						justifyContent:"center",
 						marginTop:2
 						}}>
-					{userData.hasCamp("verdures")? <ObjectiveNumberForm ref={verduraNumberRef} initValue={verdura_init_value} title={'Verdura'} color={greenColor} />: <div></div>} 
+					{userData.hasCamp("verdura")? <ObjectiveNumberForm ref={verduraNumberRef} initValue={verdura_init_value} title={'Verdura'} color={greenColor} />: <div></div>} 
 					<Divider orientation="vertical" flexItem sx={{m:1}} />
 					{userData.hasCamp("fruita")? <ObjectiveNumberForm ref={fruitaNumberRef} initValue={fruita_init_value} title={'Fruita'} color={greenColor}/>: <div></div>} 
 				</Box>
@@ -154,7 +156,7 @@ function GoalsForm(props) {
 				</Box>
 					<div>
 						<button type="submit">{submitLabel}</button>
-					</div>
+					</div>					
 				</form>
 			</div>
 		</>

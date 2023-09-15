@@ -21,7 +21,7 @@ class UserStorage {
     }
 
     saveUserWithExpirationTime = (user, remember)=>{
-        console.log("saveUserWithExpirationTime")
+        // console.log("saveUserWithExpirationTime")
         let expirationTime = this.shortExpirationTime
         if(remember){
             expirationTime = this.longExpirationTime
@@ -32,8 +32,6 @@ class UserStorage {
             value: user,
             expiry: now.getTime() + expirationTime,
         }
-        console.log(item)
-
         window.localStorage.setItem(this.localStorageKey, JSON.stringify(item))
     }
 

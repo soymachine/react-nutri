@@ -34,15 +34,15 @@ const updateObjectives = async (cartillaObj, cartillaID) => {
 	const config = {
 		headers: { Authorization: token },
 	}
-	console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
-	console.log(cartillaObj)
+	//console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
+	//console.log(cartillaObj)
 	const response = await axios.put(`${baseUrl}/${cartillaID}`, cartillaObj, config)
 	return response.data
 }
 
 const sendObjectives = async (objectivesObject, isNew, objectiveID) =>{
 	// create cartilla o updatecartilla
-	console.log(`sendCartilla, isNew:${isNew} cartillaID:${objectiveID}`)
+	//console.log(`sendCartilla, isNew:${isNew} cartillaID:${objectiveID}`)
 	if(isNew){
 		return createObjectives(objectivesObject)
 	}else{
