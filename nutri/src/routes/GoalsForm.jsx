@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import ObjectiveNumberForm from './ObjectiveNumberForm'
-import NumberForm from './NumberForm'
+import ObjectiveNumberForm from '../components/ObjectiveNumberForm'
+import NumberForm from '../components/NumberForm'
 import { Box, Chip, Divider, TextField, Alert, AlertTitle } from '@mui/material'
 import UserData from '../logic/data/UserData'
-import CustomBackdrop from './helpers/CustomBackdrop'
+import CustomBackdrop from '../components/helpers/CustomBackdrop'
 
 let greenColor = '#96C291'
 let yellowColor = '#FFBA86'
@@ -87,7 +87,6 @@ function GoalsForm(props) {
 	const plantillaForm = () => (
 		<>
 			<CustomBackdrop openBackdrop={openBackdrop} responseFromServer={props.responseFromServer}></CustomBackdrop>
-			<div>Usuari: {user.username}</div>
 			<h1>Objectius</h1>
 			<div>
 				<form onSubmit={OnGoalsSubmit}>

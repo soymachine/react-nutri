@@ -8,6 +8,7 @@ const usuariSchema = mongoose.Schema({
     unique: true
   },
   camps:Array, 
+  maxims:Array, 
   nom:String,
   passwordHash: String,
   cartilles: [

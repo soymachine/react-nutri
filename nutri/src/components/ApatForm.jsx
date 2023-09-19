@@ -2,51 +2,67 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import FilledInput from '@mui/material/FilledInput';
 import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import Models from '../logic/data/Models'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState, useEffect } from 'react'
-import { Chip, TextField, Divider } from '@mui/material';
+import { Chip, TextField, Divider, FormControlLabel, Checkbox } from '@mui/material';
+
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+
 
 const defaultTheme = createTheme();
 const regex = /^[0-9\b]+$/;
+const models = Models.getInstance()
 
 function ApatForm({ title, setModel, model }) {
-
-	const styleObj = {
-		
+	
+	const returnCorrectDropdownValue = (value) =>{
+		if(value == undefined || value == null){
+			return ''
+		}else{
+			return value
+		}
 	}
 
-	const [proteines, setProteines] = useState(model.proteines)
-	const [hidrats, setHidrats] = useState(model.hidrats)
-	const [fibra, setFibra] = useState(model.fibra)
-	const [greixos, setGreixos] = useState(model.greixos)
-	const [lactics, setLactics] = useState(model.lactics)
+	const returnCorrectCheckValue = (value) =>{
+		if(value == undefined || value == null){
+			return false
+		}else{
+			return value
+		}
+	}
+
+	//console.log(`model.proteines:${model.proteines}`)
+	const [proteines, setProteines] = useState(()=>{ return returnCorrectDropdownValue(model.proteines)})
+	const [hidrats, setHidrats] = useState(()=>{ return returnCorrectDropdownValue(model.hidrats)})
+	const [fibra, setFibra] = useState(()=>{ return returnCorrectCheckValue(model.fibra)})
+	const [greixos, setGreixos] = useState(()=>{ return returnCorrectCheckValue(model.greixos)})
+	const [lactics, setLactics] = useState(()=>{ return returnCorrectCheckValue(model.lactics)})
+	const [comentaris, setComentaris] = useState(model.comentaris)
+
+	// console.log(`Hook en ApatForm model.comentaris:${model.comentaris} title:${title}`)
 
 	const hook = () => {
-		console.log(`Hook en ApatForm model.proteines:${model.proteines} title:${title}`)
-		setProteines(model.proteines)
-		setHidrats(model.hidrats)
-		setFibra(model.fibra)
-		setGreixos(model.greixos)
-		setLactics(model.lactics)
+		setProteines(returnCorrectDropdownValue(model.proteines))
+		setHidrats(returnCorrectDropdownValue(model.hidrats))
+		setFibra(returnCorrectCheckValue(model.fibra))
+		setGreixos(returnCorrectCheckValue(model.greixos))
+		setLactics(returnCorrectCheckValue(model.lactics))
+		setComentaris(model.comentaris)
 	}
 
 	useEffect(hook, [model])
 
 	const handleProteinesChange = (event) => {
 		
-		if (event.target.value === "" || regex.test(event.target.value)) 
-		{
-			let newProteines = (event.target.value)
-			setProteines(newProteines)
-			setModel({ ...model, proteines:newProteines })
-		}
+		let newProteines = (event.target.value)
+		//console.log(`newProteines:${newProteines}`)
+		setProteines(newProteines)
+		setModel({ ...model, proteines:newProteines })
 	}
 
 	const handleHidratsChange = (event) => {
@@ -59,36 +75,33 @@ function ApatForm({ title, setModel, model }) {
 	}
 
 	const handleFibraChange = (event) => {
-		if (event.target.value === "" || regex.test(event.target.value))
-		{
-			let newFibra = (event.target.value)
+		let newFibra = (event.target.checked)
 			setFibra(newFibra)
 			setModel({ ...model, fibra:newFibra })
-		}
 	}
 
 	const handleGreixosChange = (event) => {
-		if (event.target.value === "" || regex.test(event.target.value))
-		{
-			let newGreix = (event.target.value)
-			setGreixos(newGreix)
-			setModel({ ...model, greixos:newGreix })
-		}
+		let newGreix = (event.target.checked)
+		setGreixos(newGreix)
+		setModel({ ...model, greixos:newGreix })
 	}
 
 	const handleLacticsChange = (event) => {
-		if (event.target.value === "" || regex.test(event.target.value))
-		{
-			let newLactics = (event.target.value)
-			setLactics(newLactics)
-			setModel({ ...model, lactics:newLactics })
-		}
+		let newLactics = (event.target.checked)
+		setLactics(newLactics)
+		setModel({ ...model, lactics:newLactics })
+	}
+
+	const handleComentarisChange = (event) => {
+		let newComentaris = (event.target.value)
+		setComentaris(newComentaris)
+		setModel({ ...model, comentaris:newComentaris })
 	}
 
 	return (
 		<>
 			<ThemeProvider theme={defaultTheme}>
-				<Container component="main" maxWidth="md">
+				<Container component="main" maxWidth="md">					
 					<CssBaseline />
 					<Divider>
 						<Chip label={title} />
@@ -99,44 +112,64 @@ function ApatForm({ title, setModel, model }) {
 						display: 'flex',
 						flexDirection: 'row',
 						alignItems: 'center',
+						gap: 5
+					}}>
+						<FormControl >
+							<InputLabel id="proteines-select-label">Proteines</InputLabel>
+							<Select
+								labelId="proteines-select-label"
+								id="proteines-select"
+								value={proteines}
+								label="Proteines"
+								sx={{ minWidth: 120 }}
+								onChange={handleProteinesChange}
+								>
+								<MenuItem value={models.getProteinesValue(Models.CARN_VERMELLA)}>{models.getProteinesLabel(Models.CARN_VERMELLA)}</MenuItem>
+								<MenuItem value={models.getProteinesValue(Models.CARN_BLANCA)}>{models.getProteinesLabel(Models.CARN_BLANCA)}</MenuItem>
+								<MenuItem value={models.getProteinesValue(Models.PEIX_BLANC)}>{models.getProteinesLabel(Models.PEIX_BLANC)}</MenuItem>
+								<MenuItem value={models.getProteinesValue(Models.PEIX_BLAU)}>{models.getProteinesLabel(Models.PEIX_BLAU)}</MenuItem>
+								<MenuItem value={models.getProteinesValue(Models.LLEGUMS)}>{models.getProteinesLabel(Models.LLEGUMS)}</MenuItem>
+								<MenuItem value={models.getProteinesValue(Models.OUS)}>{models.getProteinesLabel(Models.OUS)}</MenuItem>
+								<MenuItem value={models.getProteinesValue(Models.RES)}>{models.getProteinesLabel(Models.RES)}</MenuItem>
+							</Select>
+						</FormControl>
+						<FormControl >
+							<InputLabel id="hidrats-select-label">Hidrats</InputLabel>
+							<Select
+								labelId="hidrats-select-label"
+								id="hidrats-select"
+								value={hidrats}
+								label="Hidrats"
+								sx={{ minWidth: 120 }}
+								onChange={handleHidratsChange}
+								>
+								<MenuItem value={models.getHidratsValue(Models.PASTA)}>{models.getHidratsLabel(Models.PASTA)}</MenuItem>
+								<MenuItem value={models.getHidratsValue(Models.ARROS)}>{models.getHidratsLabel(Models.ARROS)}</MenuItem>
+								<MenuItem value={models.getHidratsValue(Models.PATATA)}>{models.getHidratsLabel(Models.PATATA)}</MenuItem>
+								<MenuItem value={models.getHidratsValue(Models.PA)}>{models.getHidratsLabel(Models.PA)}</MenuItem>
+								<MenuItem value={models.getHidratsValue(Models.RES)}>{models.getHidratsLabel(Models.RES)}</MenuItem>
+							</Select>
+							</FormControl>
+						<FormControlLabel control={<Checkbox checked={fibra} onChange={handleFibraChange} />} label="Fibra" />
+						<FormControlLabel control={<Checkbox checked={greixos} onChange={handleGreixosChange} />} label="Greixos" />
+						<FormControlLabel control={<Checkbox checked={lactics} onChange={handleLacticsChange} />} label="Làctics" />
+					</Box>
+					<Box
+					sx={{
+						marginTop: 2,
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
 						marginBottom:2
 					}}>
 						<TextField
-							sx = {{margin:1}}
+							fullWidth
+							sx = {{margin:0}}
 							type="text"
-							id="outlined-controlled"
-							label="Proteines"
-							value={proteines}
-							onChange={handleProteinesChange}
-						/>
-						<TextField
-							sx = {{margin:1}}
-
-							id="outlined-controlled"
-							label="Hidrats"
-							value={hidrats}
-							onChange={handleHidratsChange}
-						/>
-						<TextField
-							sx = {{margin:1}}
-							id="outlined-controlled"
-							label="Fibra"
-							value={fibra}
-							onChange={handleFibraChange}
-						/>
-						<TextField
-							sx = {{margin:1}}
-							id="outlined-controlled"
-							label="Greixos"
-							value={greixos}
-							onChange={handleGreixosChange}
-						/>
-						<TextField
-							sx = {{margin:1}}
-							id="outlined-controlled"
-							label="Làctics"
-							value={lactics}
-							onChange={handleLacticsChange}
+							id="comentaris"
+							label="Comentaris"
+							value={comentaris}
+							onChange={handleComentarisChange}
 						/>
 					</Box>
 				</Container>

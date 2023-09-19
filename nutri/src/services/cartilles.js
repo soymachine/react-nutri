@@ -46,6 +46,39 @@ const retrieveDateData = async (user, date) => {
 	return response.data
 }
 
+const retrieveYearData = async (user, year) =>{
+	const config = {
+		headers: { Authorization: token },
+	}
+
+	const query = {
+		params: {
+			user_id: user.id,
+			year:year
+		}
+	}
+
+	const response = await axios.get(`${baseUrl}/year`, query)
+	return response.data
+}
+
+const retrieveMonthData = async (user, month, year) =>{
+	const config = {
+		headers: { Authorization: token },
+	}
+
+	const query = {
+		params: {
+			user_id: user.id,
+			year:year,
+			month: month
+		}
+	}
+
+	const response = await axios.get(`${baseUrl}/month`, query)
+	return response.data
+}
+
 const sendCartilla = async (cartillaObject, isNew, cartillaID) =>{
 	// create cartilla o updatecartilla
 	console.log(`sendCartilla, isNew:${isNew} cartillaID:${cartillaID}`)
@@ -119,4 +152,4 @@ const validateCartilla = cartillaObj => {
 }
 
 
-export default { getAll, createCartilla, updateCartilla, sendCartilla, update, deleteEntry, setToken, validateCartilla, retrieveTodayData, retrieveDateData }
+export default { getAll, createCartilla, updateCartilla, sendCartilla, update, deleteEntry, setToken, validateCartilla, retrieveTodayData, retrieveDateData, retrieveMonthData, retrieveYearData }

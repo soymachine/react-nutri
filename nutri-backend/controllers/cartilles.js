@@ -25,6 +25,7 @@ const constructCartillaObj = (body, user) =>{
     fibra:body.esmorzar.fibra,  
     greixos:body.esmorzar.greixos,  
     lactics:body.esmorzar.lactics,  
+    comentaris:body.esmorzar.comentaris,  
   }
 
   const migMati = {
@@ -33,6 +34,7 @@ const constructCartillaObj = (body, user) =>{
     fibra:body.migMati.fibra,  
     greixos:body.migMati.greixos,  
     lactics:body.migMati.lactics,  
+    comentaris:body.migMati.comentaris,  
   }
 
   const berenar = {
@@ -41,6 +43,7 @@ const constructCartillaObj = (body, user) =>{
     fibra:body.berenar.fibra,  
     greixos:body.berenar.greixos,  
     lactics:body.berenar.lactics,  
+    comentaris:body.berenar.comentaris,  
   }
 
   const dinar = {
@@ -49,6 +52,7 @@ const constructCartillaObj = (body, user) =>{
     fibra:body.dinar.fibra,  
     greixos:body.dinar.greixos,  
     lactics:body.dinar.lactics,  
+    comentaris:body.dinar.comentaris,  
   }
 
   const sopar = {
@@ -57,6 +61,7 @@ const constructCartillaObj = (body, user) =>{
     fibra:body.sopar.fibra,  
     greixos:body.sopar.greixos,  
     lactics:body.sopar.lactics,  
+    comentaris:body.sopar.comentaris,  
   }
 
   const cartilla = {
@@ -91,6 +96,7 @@ const constructCartillaClass = (body, user) =>{
       fibra:body.dinar.fibra,  
       greixos:body.dinar.greixos,  
       lactics:body.dinar.lactics,  
+      comentaris:body.dinar.comentaris,  
     })
 
     const sopar = new Apat({
@@ -99,6 +105,7 @@ const constructCartillaClass = (body, user) =>{
       fibra:body.sopar.fibra,  
       greixos:body.sopar.greixos,  
       lactics:body.sopar.lactics,  
+      comentaris:body.sopar.comentaris,  
     })
 
     const esmorzar = new Apat({
@@ -107,6 +114,7 @@ const constructCartillaClass = (body, user) =>{
       fibra:body.esmorzar.fibra,  
       greixos:body.esmorzar.greixos,  
       lactics:body.esmorzar.lactics,  
+      comentaris:body.esmorzar.comentaris,  
     })
 
     const migMati = new Apat({
@@ -115,6 +123,7 @@ const constructCartillaClass = (body, user) =>{
       fibra:body.migMati.fibra,  
       greixos:body.migMati.greixos,  
       lactics:body.migMati.lactics,  
+      comentaris:body.migMati.comentaris,  
     })
 
     const berenar = new Apat({
@@ -123,6 +132,7 @@ const constructCartillaClass = (body, user) =>{
       fibra:body.berenar.fibra,  
       greixos:body.berenar.greixos,  
       lactics:body.berenar.lactics,  
+      comentaris:body.berenar.comentaris,  
     })
 
     const cartilla = new Cartilla({
@@ -188,6 +198,65 @@ nutriRouter.get('/today', async (request, response) => {
     
     // console.log(cartilles)
     response.json(cartilles)
+})
+
+nutriRouter.get('/month', async (request, response) => {
+  // Devolver todas las cartillas del usuario id y del mes + año que venga por params
+  // Qué día es hoy?
+  let year = request.query.year
+  let month = zeroPad(request.query.month, 2)
+  let dayStart = zeroPad(1, 2)
+  let dayEnd = 31
+  // const cartilles = [] // De testeo
+
+  // inicio del mes
+  let start = new Date(`${year}-${month}-${dayStart}T00:00:00.000Z`)
+  // final del mes
+  let end = new Date(`${year}-${month}-${dayEnd}T23:59:00.000Z`)
+
+
+  let user_id = request.query.user_id
+  console.log(`year:${year} month: ${month} start:${start} end:${end} user_id:${user_id}`)
+  //*
+  const cartilles = await Cartilla.find({
+      user:user_id, 
+      date:{$gte: start, $lt: end}
+      }).populate('user', { username: 1, nom: 1 })
+  
+  console.log(cartilles)
+  //*/
+  
+  response.json(cartilles)
+})
+
+nutriRouter.get('/year', async (request, response) => {
+  // Devolver todas las cartillas del usuario id y del mes + año que venga por params
+  // Qué día es hoy?
+  let year = request.query.year
+  let monthStart = zeroPad(1, 2)
+  let monthEnd = 12
+  let dayStart = zeroPad(1, 2)
+  let dayEnd = 31
+  
+
+  // inicio del mes
+  let start = new Date(`${year}-${monthStart}-${dayStart}T00:00:00.000Z`)
+  // final del mes
+  let end = new Date(`${year}-${monthEnd}-${dayEnd}T23:59:00.000Z`)
+
+
+  let user_id = request.query.user_id
+  console.log(`year:${year} monthStart: ${monthStart} monthEnd:${monthEnd} start:${start} end:${end} user_id:${user_id}`)
+  //*
+  const cartilles = await Cartilla.find({
+      user:user_id, 
+      date:{$gte: start, $lt: end}
+      }).populate('user', { username: 1, nom: 1 }).sort("date")
+  
+  console.log(cartilles)
+  //*/
+  //const cartilles = [] // De testeo
+  response.json(cartilles)
 })
 
 

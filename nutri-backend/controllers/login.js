@@ -23,6 +23,9 @@ loginRouter.post('/', async (request, response) => {
   }
   
   const camps = user.camps
+  const maxims = user.maxims[0]
+  console.log(`maxims`)
+  console.log(maxims)
   // token expires in 60*60 seconds, that is, in one hour
   const token = jwt.sign(
     userForToken, 
@@ -32,7 +35,7 @@ loginRouter.post('/', async (request, response) => {
 
   response
     .status(200)
-    .send({ token, username: user.username, name: user.name, id:user._id, camps: camps })
+    .send({ token, username: user.username, name: user.name, id:user._id, camps: camps, maxims: maxims })
 })
 
 module.exports = loginRouter

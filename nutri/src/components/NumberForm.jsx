@@ -3,11 +3,14 @@ import useQuantity from './customhooks/useQuantity'
 import { IconButton, TextField  } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 
-const regex = /^[0-9\b]+$/;
+const regex = /^[0-9\b,.]+$/;
 
 const NumberForm = forwardRef(function NumberForm(props, refs) {
 	let quantity = useQuantity(props.initValue)
-	// console.log(`quantity:${props.initValue} para ${props.title}`)
+	
+	let hasTitle = props.hasTitle
+	if(hasTitle == undefined) hasTitle = true
+
 	const getQuantity = () =>{
 		/*
 		console.log(`getQuantity:`)
@@ -34,7 +37,7 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 		if (event.target.value === "" || regex.test(event.target.value))
 		{
 			let newValue = (event.target.value)
-			console.log(`newValue:${newValue}`)
+			//console.log(`newValue:${newValue}`)
 			quantity.changeNumber(newValue)
 		}
 	}
@@ -44,6 +47,11 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 			getQuantity
 		}
 	  })
+
+	const titleProps = {}
+	if(hasTitle){
+		titleProps.label = props.title
+	}
 
 	return (
 		<>
@@ -56,10 +64,12 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 				"& .MuiOutlinedInput-root": {
 				"& > fieldset": { borderColor: `${props.color}` },
 				},
-				border: { color: 'red' }, ml:1, mr:1, width: '12ch'
+				border: { color: 'red' }, ml:1, mr:1, width: '15ch'
 			}}
 		
-			id="outlined-basic" label={props.title} value={getQuantity()} onChange={handleValueChange} variant="outlined" />
+			id="outlined-basic" 
+			{...titleProps}
+			value={getQuantity()} onChange={handleValueChange} variant="outlined" />
 		<IconButton sx={{mt: 1, color: props.color}} onClick={quantity.addNumber} aria-label="delete">
 			<Add />
 		</IconButton>
