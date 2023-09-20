@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import ApatForm from '../components/ApatForm'
 import NumberForm from '../components/NumberForm'
 import ExerciciForm from '../components/ExerciciForm'
+import ResumSetmana from '../components/ResumSetmana'
 import CustomBackdrop from '../components/helpers/CustomBackdrop'
 import { Box, Chip, Container, Divider, Grid, Paper, Stack, TextField, Typography } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -28,12 +29,13 @@ let lightGreenColor = "#96c2912e"
 let yellowColor = '#FFDBAA'
 let lightYellowColor = '#FFDBAA'
 let redColor = '#A73121'
-let lightRedColor = '#a731211a'
+let lightRedColor = '#a7312142'
 let lightGreyColor = '#00000003'
 let blueColor = '#0E21A0'
 let lightBlueColor = '#0E21A0'
 let pinkColor = '#9400FF'
 let lightPinkColor = '#9400FF'
+let whiteColor = '#FFFFFF'
 const userData = UserData.getInstance()
 const models = Models.getInstance()
 let dadesFuturesString = "(Estem a una data futura)"
@@ -57,6 +59,16 @@ function CartillaForm(props) {
 	let cardio_init_value = userData.getTodayData("cardio")
 	let pes_init_value = userData.getTodayData("pes")
 
+	const initValues = {
+		"fruita": fruita_init_value,
+		"verdura": verdura_init_value,
+		"alcohol": alcohol_init_value,
+		"xocolata": xocolata_init_value,
+		"dolcos": dolcos_init_value,
+		"refrescos": refrescos_init_value,
+		"extresSalats": extresSalats_init_value
+	}
+
 	const fruitaNumberRef = useRef()	
 	const verduraNumberRef = useRef()	
 	const alcoholNumberRef = useRef()
@@ -66,8 +78,27 @@ function CartillaForm(props) {
 	const extresSalatsNumberRef = useRef()
 	const pesNumberRef = useRef()
 
+	const refs = {
+		"fruita": fruitaNumberRef,
+		"verdura": verduraNumberRef,
+		"alcohol": alcoholNumberRef,
+		"xocolata": xocolataNumberRef,
+		"dolcos": dolcosNumberRef,
+		"refrescos": refrescosNumberRef,
+		"extresSalats": extresSalatsNumberRef
+	}
+
+	const checkActualDate = (date) =>{
+		if(date == null){
+			console.error("New date on the fly")
+			return new Date()
+		}else{
+			return date
+		}
+	}
+
 	const [hasData, setHasData] = useState(false)
-	const [date, setDate] = useState(()=>{return userData.getTodayData("data")})
+	const [date, setDate] = useState(()=>{return userData.today})
 	const [esmorzar, setEsmorzar] = useState(()=>{return userData.getTodayData("esmorzar")})
 	const [migMati, setMigMati] = useState(()=>{return userData.getTodayData("migMati")})
 	const [dinar, setDinar] = useState(()=>{return userData.getTodayData("dinar")})
@@ -75,15 +106,58 @@ function CartillaForm(props) {
 	const [sopar, setSopar] = useState(()=>{return userData.getTodayData("sopar")})
 	const [forca, setForca] = useState(()=>{return userData.getTodayData("forca")})
 	const [cardio, setCardio] = useState(()=>{return userData.getTodayData("cardio")})
+	
+	// Se actualizan desde los NumberForms y sirven para actualizar el color de fondo de los inputs
+	const [verdura, setVerdura] = useState(0)
+	const [fruita, setFruita] = useState(0)
+	const [xocolata, setXocolata] = useState(0)
+	const [dolcos, setDolcos] = useState(0)
+	const [extresSalats, setExtresSalats] = useState(0)
+	const [alcohol, setAlcohol] = useState(0)
+	const [refrescos, setRefrescos] = useState(0)
+	
 	const [user, setUser] = useState(props.user)
 	const [openBackdrop, setOpenBackdrop] = useState(false)
 	const [value, setValue] = useState(dayjs(new Date().toString()));
 	const [highlightedDays, setHighlightedDays] = useState([1, 2, 15]);
 
 	// Construir un array con los datos rellenados de esta semana
-
-	const dataCartillas = userData.getCartillasFromCurentWeek(value.toDate())
-
+	//console.log(`[getCartillasFromCurentWeek] date:${date}`)
+	//console.log(`[getCartillasFromCurentWeek] userData.today:${userData.today}`)
+	//console.log(`[getCartillasFromCurentWeek] verdura_init_value:${verdura_init_value}`)
+	const dataCartillas = userData.getCartillasFromCurentWeek(date)
+	//console.log("[Cartilla Form]")
+	//console.log(dataCartillas)
+	//console.log(userData.yearData)
+	//console.log(`userData.getTodayData("data"):${date}`)
+	let verduresAcc = 0
+	let fruitesAcc = 0
+	let dolcosAcc = 0
+	let xocolataAcc = 0
+	let extresSalatsAcc = 0
+	let alcoholAcc = 0
+	let refrescosAcc = 0
+	
+	if(dataCartillas){
+		verduresAcc = userData.getSumatorioDe("verdura", dataCartillas)
+		fruitesAcc = userData.getSumatorioDe("fruita", dataCartillas)
+		dolcosAcc = userData.getSumatorioDe("dolcos", dataCartillas)
+		xocolataAcc = userData.getSumatorioDe("xocolata", dataCartillas)
+		extresSalatsAcc = userData.getSumatorioDe("extresSalats", dataCartillas)
+		alcoholAcc = userData.getSumatorioDe("alcohol", dataCartillas)
+		refrescosAcc = userData.getSumatorioDe("refrescos", dataCartillas)
+		//console.log(`xocolataAcc:${xocolataAcc} extresSalatsAcc:${extresSalatsAcc} dolcosAcc:${dolcosAcc} verduresAcc:${verduresAcc} fruitesAcc:${fruitesAcc} refrescosAcc:${refrescosAcc} alcoholAcc:${alcoholAcc}`)
+	}
+	
+	const acumulados = {
+		"fruita": fruitesAcc,
+		"verdura": verduresAcc,
+		"alcohol": alcoholAcc,
+		"xocolata": xocolataAcc,
+		"dolcos": dolcosAcc,
+		"refrescos": refrescosAcc,
+		"extresSalats": extresSalatsAcc
+	}
 
 	const returnInfoDate = ()=>{
 		const today = dayjs(new Date().toString())
@@ -125,6 +199,41 @@ function CartillaForm(props) {
 	}
 
 	const colorForDatePicker = returnColorDate()
+
+	const getBackgroundColorForAlimento = (alimento)=>{
+		const acumulado = acumulados[alimento]
+		//console.log(`alimento:${alimento}, acumulado:${acumulado}`)
+		const ref = refs[alimento]
+		//console.log(`ref:${ref} for alimento:${alimento}`)
+		if(ref.current){
+			const maxims = userData.getMaximsForAliment(alimento)		
+		
+			const currentValue = initValues[alimento]
+			//console.log(ref.current.getQuantity())
+			//console.log(`currentValue:${currentValue} maxims.dia:${maxims.dia} maxims.setmana:${maxims.setmana}`)
+
+			if(currentValue > maxims.dia)
+			{
+				// current > max al dia?
+				return lightRedColor
+
+			}else if(acumulado > maxims.setmana)
+			{
+				// current > max a la setmana?
+				return lightRedColor
+			}else if(currentValue == 0)
+			{
+				return whiteColor
+			}
+			else if(currentValue == maxims.dia || acumulado == maxims.setmana)
+			{
+				return lightYellowColor
+			}else{
+				return lightGreenColor
+			}
+		}
+		
+	}
 	
 	const hook = () => {
 		// Si no hay usuario, entonces navegamos a otra página
@@ -135,9 +244,11 @@ function CartillaForm(props) {
 		// Get date if not userData.isTodayDataSet
 		if(userData.isTodayDataSet){
 			//console.log(`data? ${userData.getTodayData("data")}`)			
-			//console.log(userData.getTodayData("data"))
-			// setDate(dat)
+			//console.log(`otra manera de coger data? ${userData.todayData.data}`)			
+			//console.error("Como sí hay datos para hoy, seteamos la fecha según getTodayData: " + userData.getTodayData("data"))
+			setDate(userData.getTodayData("data"))
 		}else{
+			//console.error("Como no hay datos para hoy, ponemos la fecha a este momento: " + new Date().toString())
 			setDate(new Date().toString())
 		}
 		
@@ -146,15 +257,25 @@ function CartillaForm(props) {
 	useEffect(hook, [])
 
 	const dataUpdateHook = () => {
-		console.log(`Data updated userData.isTodayDataSet:${userData.isTodayDataSet}`) // 
+		// console.log(`dataUpdateHook`) // 
 		setEsmorzar(userData.getTodayData("esmorzar"))
 		setMigMati(userData.getTodayData("migMati"))
 		setDinar(userData.getTodayData("dinar"))
 		setBerenar(userData.getTodayData("berenar"))
 		setSopar(userData.getTodayData("sopar"))
+		setDate(userData.today)
 	}
 
 	useEffect(dataUpdateHook, [props, userData.isTodayDataSet])
+
+	const valuesHook = () => {
+		// TODO, pending
+		if(fruitaNumberRef.current){
+			// console.log(`valuesHook fruita:${fruitaNumberRef.current.getQuantity()}`) // 
+		}
+	}
+
+	useEffect(valuesHook, [verdura, fruita, xocolata, dolcos, extresSalats, alcohol, refrescos])
 
 	const handleCloseBackdrop = () => {
 		setOpenBackdrop(false);
@@ -198,7 +319,7 @@ function CartillaForm(props) {
 
 	const onChangeDatePicker = (newValue)=>{
 		setValue(newValue)
-		setDate(newValue.toDate())
+		// setDate(newValue.toDate())
 		props.OnCartillaNewDataSelected(newValue)
 	}
 
@@ -222,7 +343,7 @@ function CartillaForm(props) {
 			height:8,
 			top:24,
 			zIndex:1,
-			color:"#87b3df"
+			color:"#02bb02"
 		}
 		
 		const renderDay = (hasData)=>{
@@ -280,11 +401,12 @@ function CartillaForm(props) {
 			
 			<div>
 				<form onSubmit={OnCartillaSubmit}>
+					<ResumSetmana dataCartillas={dataCartillas} />
 					<ApatForm title={'Esmorzar'} setModel={setEsmorzar} model={esmorzar}/>
 					<ApatForm title={'Mig Matí'} setModel={setMigMati} model={migMati}/>
 					<ApatForm title={'Dinar'} setModel={setDinar} model={dinar}/>
 					<ApatForm title={'Berenar'} setModel={setBerenar} model={berenar}/>
-					<ApatForm title={'Sopar'} setModel={setSopar} model={sopar}/>
+					<ApatForm title={'Sopar'} setModel={setSopar} model={sopar}/>					
 					<Divider maxwidth="md">
 						<Chip label="Altres objectius"/>
 					</Divider>
@@ -295,8 +417,8 @@ function CartillaForm(props) {
 									'& .MuiTableCell-root':{fontWeight:700} }}>
 									<TableCell>Tipus</TableCell>
 									<TableCell align="center" >Avui</TableCell>
-									<TableCell align="right">Acumulat setmana</TableCell>
-									<TableCell align="right">Màxim diari</TableCell>
+									<TableCell align="center">Acumulat setmana</TableCell>
+									<TableCell align="center">Màxim diari</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -304,92 +426,92 @@ function CartillaForm(props) {
 								{userData.hasCamp("verdura") &&
 									<TableRow
 										key="verdura"
-										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:lightGreenColor }}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:getBackgroundColorForAlimento("verdura") }}
 										>
 										<TableCell component="th" scope="row">Verdura</TableCell>
 										<TableCell align="center" >
-											<NumberForm hasTitle={false} title={'Verdura'} ref={verduraNumberRef} initValue={verdura_init_value} color={greenColor}/>
+											<NumberForm onChange={setVerdura} hasTitle={false} title={'Verdura'} ref={verduraNumberRef} initValue={verdura_init_value}/>
 										</TableCell>
-										<TableCell align="right">{"2/" + userData.user.maxims["verdura"].setmana}</TableCell>
-										<TableCell align="right">{userData.user.maxims["verdura"].dia}</TableCell>
+										<TableCell align="center">{verduresAcc + "/" + userData.user.maxims["verdura"].setmana}</TableCell>
+										<TableCell align="center">{userData.user.maxims["verdura"].dia}</TableCell>
 									</TableRow>
 								}
 								{userData.hasCamp("fruita") &&
 									<TableRow
 										key="fruita"
-										sx={{ '&:last-child td, &:last-child th': { border: 0},backgroundColor:lightGreenColor }}
+										sx={{ '&:last-child td, &:last-child th': { border: 0},backgroundColor:getBackgroundColorForAlimento("fruita") }}
 										>
 										<TableCell component="th" scope="row">Fruita</TableCell>
 										<TableCell align="center">
-											<NumberForm hasTitle={false} title={'Fruita'} ref={fruitaNumberRef} initValue={fruita_init_value} color={greenColor}/>
+											<NumberForm onChange={setFruita} hasTitle={false} title={'Fruita'} ref={fruitaNumberRef} initValue={fruita_init_value} />
 										</TableCell>
-										<TableCell align="right">{"2/" + userData.user.maxims["fruita"].setmana}</TableCell>
-										<TableCell align="right">{userData.user.maxims["fruita"].dia}</TableCell>
+										<TableCell align="center">{fruitesAcc +"/" + userData.user.maxims["fruita"].setmana}</TableCell>
+										<TableCell align="center">{userData.user.maxims["fruita"].dia}</TableCell>
 									</TableRow>
 								}
 								{userData.hasCamp("xocolata") &&
 									<TableRow
 										key="xocolata"
-										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:lightRedColor }}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:getBackgroundColorForAlimento("xocolata") }}
 										>
 										<TableCell component="th" scope="row">Xocolata</TableCell>
 										<TableCell align="center">
-											<NumberForm hasTitle={false} title={'Xocolata negra'} ref={xocolataNumberRef} initValue={xocolata_init_value} color={redColor}/>	
+											<NumberForm onChange={setXocolata} hasTitle={false} title={'Xocolata negra'} ref={xocolataNumberRef} initValue={xocolata_init_value} />	
 										</TableCell>
-										<TableCell align="right">{"2/" + userData.user.maxims["xocolata"].setmana}</TableCell>
-										<TableCell align="right">{userData.user.maxims["xocolata"].dia}</TableCell>
+										<TableCell align="center">{xocolataAcc +"/" + userData.user.maxims["xocolata"].setmana}</TableCell>
+										<TableCell align="center">{userData.user.maxims["xocolata"].dia}</TableCell>
 									</TableRow>
 								}
 								{userData.hasCamp("dolcos") &&
 									<TableRow
 										key="dolcos"
-										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:lightRedColor }}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:getBackgroundColorForAlimento("dolcos") }}
 										>
 										<TableCell component="th" scope="row">Dolços</TableCell>
 										<TableCell align="center">
-											<NumberForm hasTitle={false} title={'Dolços'} ref={dolcosNumberRef} initValue={dolcos_init_value} color={redColor}/>
+											<NumberForm onChange={setDolcos} hasTitle={false} title={'Dolços'} ref={dolcosNumberRef} initValue={dolcos_init_value} />
 										</TableCell>
-										<TableCell align="right">{"2/" + userData.user.maxims["dolcos"].setmana}</TableCell>
-										<TableCell align="right">{userData.user.maxims["dolcos"].dia}</TableCell>
+										<TableCell align="center">{dolcosAcc +"/" + userData.user.maxims["dolcos"].setmana}</TableCell>
+										<TableCell align="center">{userData.user.maxims["dolcos"].dia}</TableCell>
 									</TableRow>
 								}
 								{userData.hasCamp("extresSalats") &&
 									<TableRow
 										key="extresSalats"
-										sx={{ '&:last-child td, &:last-child th': { border: 0 } ,backgroundColor:lightRedColor}}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 } ,backgroundColor:getBackgroundColorForAlimento("extresSalats")}}
 										>
 										<TableCell component="th" scope="row">Extres Salats</TableCell>
 										<TableCell align="center">
-											<NumberForm hasTitle={false} title={'Extres salats'} ref={extresSalatsNumberRef} initValue={extresSalats_init_value} color={redColor}/>
+											<NumberForm onChange={setExtresSalats} hasTitle={false} title={'Extres salats'} ref={extresSalatsNumberRef} initValue={extresSalats_init_value} />
 										</TableCell>
-										<TableCell align="right">{"2/" + userData.user.maxims["extresSalats"].setmana}</TableCell>
-										<TableCell align="right">{userData.user.maxims["extresSalats"].dia}</TableCell>
+										<TableCell align="center">{extresSalatsAcc +"/" + userData.user.maxims["extresSalats"].setmana}</TableCell>
+										<TableCell align="center">{userData.user.maxims["extresSalats"].dia}</TableCell>
 									</TableRow>
 								}
 								{userData.hasCamp("alcohol") &&
 									<TableRow
 										key="alcohol"
-										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:lightRedColor }}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:getBackgroundColorForAlimento("alcohol") }}
 										>
 										<TableCell component="th" scope="row">Alcohol</TableCell>
 										<TableCell align="center">
-											<NumberForm hasTitle={false} title={'Alcohol'} ref={alcoholNumberRef} initValue={alcohol_init_value} color={redColor}/>
+											<NumberForm onChange={setAlcohol} hasTitle={false} title={'Alcohol'} ref={alcoholNumberRef} initValue={alcohol_init_value} />
 										</TableCell>
-										<TableCell align="right">{"2/" + userData.user.maxims["alcohol"].setmana}</TableCell>
-										<TableCell align="right">{userData.user.maxims["alcohol"].dia}</TableCell>
+										<TableCell align="center">{alcoholAcc +"/" + userData.user.maxims["alcohol"].setmana}</TableCell>
+										<TableCell align="center">{userData.user.maxims["alcohol"].dia}</TableCell>
 									</TableRow>
 								}
 								{userData.hasCamp("refrescos") &&
 									<TableRow
 										key="refrescos"
-										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:lightRedColor }}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 },backgroundColor:getBackgroundColorForAlimento("refrescos") }}
 										>
 										<TableCell component="th" scope="row">Refrescos</TableCell>
 										<TableCell align="center">
-											<NumberForm hasTitle={false} title={'Refrescos'} ref={refrescosNumberRef} initValue={refrescos_init_value} color={redColor}/>
+											<NumberForm onChange={setRefrescos} hasTitle={false} title={'Refrescos'} ref={refrescosNumberRef} initValue={refrescos_init_value} />
 										</TableCell>
-										<TableCell align="right">{"2/" + userData.user.maxims["refrescos"].setmana}</TableCell>
-										<TableCell align="right">{userData.user.maxims["refrescos"].dia}</TableCell>
+										<TableCell align="center">{refrescosAcc +"/" + userData.user.maxims["refrescos"].setmana}</TableCell>
+										<TableCell align="center">{userData.user.maxims["refrescos"].dia}</TableCell>
 									</TableRow>
 								}
 							</TableBody>
@@ -429,7 +551,9 @@ function CartillaForm(props) {
 							<Chip label="Activitat física"/>
 						</Divider>
 					<ExerciciForm setForca={setForca} setCardio={setCardio} forca={forca_init_value} cardio={cardio_init_value}/>
-					
+					<Divider maxwidth="md" sx={{mb:3,pb:3}}>
+						
+					</Divider>
 					<div>
 						<button type="submit">{submitLabel}</button>
 					</div>

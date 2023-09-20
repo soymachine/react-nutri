@@ -10,14 +10,20 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 	
 	let hasTitle = props.hasTitle
 	if(hasTitle == undefined) hasTitle = true
+	const titleProps = {}
+	if(hasTitle){
+		titleProps.label = props.title
+	}
 
 	const getQuantity = () =>{
 		/*
 		console.log(`getQuantity:`)
 		console.log(`quantity.value:${quantity.value}`)
-		console.log(`props.initValue:${props.initValue}`)
+		//console.log(`props.initValue:${props.initValue}`)
 		console.log(`--------`)
 		//*/
+		
+		//*
 		if(quantity.value == undefined)
 		{
 			return props.initValue
@@ -25,13 +31,26 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 		{ 
 			return quantity.value
 		}
+		//*/
+
+		//return quantity.initValue
 	}
 
 	const hook = () => {
 		quantity.changeNumber(props.initValue)
 	}
 
-	useEffect(hook, [props.initValue])
+	useEffect(hook, [props.initValue]) //  , quantity.value
+
+	const onChange = () => {
+		//console.log(`[NumberForm] newValue:${props.initValue} para :${props.title}`)
+		if(props.onChange){
+			props.onChange(getQuantity())
+		}
+		
+	}
+
+	useEffect(onChange, [quantity.value]) //  , quantity.value
 
 	const handleValueChange = (event) => {
 		if (event.target.value === "" || regex.test(event.target.value))
@@ -48,10 +67,7 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 		}
 	  })
 
-	const titleProps = {}
-	if(hasTitle){
-		titleProps.label = props.title
-	}
+	
 
 	return (
 		<>
@@ -64,6 +80,7 @@ const NumberForm = forwardRef(function NumberForm(props, refs) {
 				"& .MuiOutlinedInput-root": {
 				"& > fieldset": { borderColor: `${props.color}` },
 				},
+				"& input": {textAlign:"center"},
 				border: { color: 'red' }, ml:1, mr:1, width: '15ch'
 			}}
 		

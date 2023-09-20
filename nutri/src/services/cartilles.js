@@ -81,7 +81,7 @@ const retrieveMonthData = async (user, month, year) =>{
 
 const sendCartilla = async (cartillaObject, isNew, cartillaID) =>{
 	// create cartilla o updatecartilla
-	console.log(`sendCartilla, isNew:${isNew} cartillaID:${cartillaID}`)
+	//console.log(`sendCartilla, isNew:${isNew} cartillaID:${cartillaID}`)
 	if(isNew){
 		return createCartilla(cartillaObject)
 	}else{
@@ -101,8 +101,8 @@ const updateCartilla = async (cartillaObj, cartillaID) => {
 	const config = {
 		headers: { Authorization: token },
 	}
-	console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
-	console.log(cartillaObj)
+	//console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
+	//console.log(cartillaObj)
 	const response = await axios.put(`${baseUrl}/${cartillaID}`, cartillaObj, config)
 	return response.data
 }

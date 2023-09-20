@@ -20,6 +20,10 @@ class UserData{
         this.today = new Date()
     }
 
+    setToday = (newDate) =>{
+        this.today = new Date(newDate)
+    }
+
     zeroPad = (num, places) => String(num).padStart(places, '0')
 
     getCurrentMonth = ()=>{
@@ -49,12 +53,38 @@ class UserData{
 		return !isUndefined
 	}
 
-    setTodayData = (todayData)=>{
+    setTodayData = (todayData, toUpdate)=>{
         
-        if(!this.isTodayDataSet){
-            this.isTodayDataSet = true
-            this.todayData = todayData
+        this.isTodayDataSet = true
+        this.todayData = todayData
+        console.log(`todayData.date:${todayData.date}`)
+        console.log(`todayData:`)
+        console.log(todayData)
+        if(this.yearData && toUpdate){
+            // Actualizamos también la entrada de este dia en yearData
+            this.yearData = this.yearData.map( cartilla => {
+                //console.log(`cartilla.date:${cartilla.date} todayData.date:´${todayData.date}`)
+                if(cartilla.date == todayData.date){
+                    console.log("fecha encontrada, vamos a actualizarla")
+                    return todayData
+                }else{
+                    return cartilla
+                }
+            })
+            // console.log(this.yearData)
         }
+    }
+
+    getMaximsForAliment = (aliment)=>{
+        
+        if(this.user != null){
+            for (const [key, value] of Object.entries(this.user.maxims)) {
+                // console.log(`${key}: ${value}`);
+                if(key == aliment){
+                    return value
+                }
+            }
+        }        
     }
 
     setYearData = (yearData) =>{
@@ -76,15 +106,20 @@ class UserData{
     }
 
     getCartillasFromDates = (condition) =>{
+        
+        if( this.yearData == null ||  this.yearData == undefined) return null
+
         const fromStr = condition.from
         const toStr = condition.to
 
         const fromDate = new Date(fromStr)
         const toDate = new Date(toStr)
-
+        
         const newData = this.yearData.filter( cartilla =>{
             const cartillaDate = new Date(cartilla.date)
+            //console.log(`filtering, cartillaDate:${cartillaDate} fromDate:${fromDate} toDate:${toDate}` )
             if(fromDate < cartillaDate && cartillaDate < toDate){
+                //console.log(`Pasa el filtro!`)
                 return true
             }else{
                 return false
@@ -95,11 +130,48 @@ class UserData{
         // console.log(`fromDate:${fromDate} toDate:${toDate}`)
     }
 
+    getSumatorioDe = (alimento, coleccionCartillas) =>{
+        const alimentoAcumulado = coleccionCartillas.reduce((sum, cartilla) =>{
+			return sum + cartilla[alimento]
+		}, 0)
+        return alimentoAcumulado
+    }
+
     getCartillasFromCurentWeek = (currentDate) =>{
         // from:"2023/09/11", to:"2023/09/18"
-        const today = currentDate
-        
-        console.log(`today:${today}`)
+        const today = new Date(currentDate)
+        let dayNumber = today.getDay()
+        if(dayNumber == 0) dayNumber = 7
+        const day = today.getDate()
+        const month = today.getMonth() + 1
+        const year = today.getFullYear()
+        const dayWeekStart = day - (dayNumber - 1)
+        const dayWeekEnd = dayWeekStart + 7
+        const initialDateStr = `${year}/${this.zeroPad(month, 2)}/${this.zeroPad(dayWeekStart, 2)}`
+        const endDateStr = `${year}/${this.zeroPad(month, 2)}/${this.zeroPad(dayWeekEnd, 2)}`
+
+        // console.log(`[getCartillasFromCurentWeek] currentDate:${currentDate} initialDateStr:${initialDateStr} endDateStr:${endDateStr}`)
+
+        return this.getCartillasFromDates({
+            from:initialDateStr,
+            to:endDateStr
+        })           
+
+    }
+
+    getStringSetmana = (currentDate) =>{
+        const today = new Date(currentDate)
+        let dayNumber = today.getDay()
+        if(dayNumber == 0) dayNumber = 7
+        const day = today.getDate()
+        const month = today.getMonth() + 1
+        const year = today.getFullYear()
+        const dayWeekStart = day - (dayNumber - 1)
+        const dayWeekEnd = dayWeekStart + 7
+        const initialDateStr = `${this.zeroPad(dayWeekStart, 2)}/${this.zeroPad(month, 2)}/`
+        const endDateStr = `${this.zeroPad(dayWeekEnd, 2)}/${this.zeroPad(month, 2)}`
+        const str = `Setmana del ${initialDateStr} al ${endDateStr}`
+        return str
     }
 
     getCartillaDayAndMonth = (cartilla) =>{

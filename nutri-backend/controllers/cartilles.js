@@ -309,7 +309,7 @@ nutriRouter.put('/:id', async (request, response, next) => {
     //console.log(cartilla)
     console.log(`params id:${request.params.id}`)
     const cartillaUpdated = await Cartilla.findByIdAndUpdate({_id:request.params.id}, cartilla, {new:true});
-    //console.log(cartillaUpdated)
+    console.log(cartillaUpdated)
     response.json(cartillaUpdated)
     //response.json({})
     /*

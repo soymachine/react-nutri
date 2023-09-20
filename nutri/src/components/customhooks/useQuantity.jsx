@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react'
+import { useState, useReducer, useEffect } from 'react'
 
 function setValueTask(state, action){
 	let newValue
@@ -28,7 +28,22 @@ function setValueTask(state, action){
 
 const useCounter = (initValue) => {
 	const [value, setValue] = useReducer(setValueTask, initValue)
+	//console.log(`[useCounter] value:${value} initValue:${initValue}`)
 
+	/*
+	const hook = () => {
+		
+		changeNumber(initValue)
+		//console.log(`[++useCounter] initValue:${initValue}`)
+		
+		//if(props.onChange){
+		//	props.onChange(getQuantity())
+		//}
+		
+	}
+
+	useEffect(hook, [initValue]) //  , quantity.value
+	*/
 	const increase = () => {
 		setValue({type:'increase'})
 	}
@@ -48,9 +63,8 @@ const useCounter = (initValue) => {
 		increase({type:'decrease'})
 	}
 
-	const changeNumber = (value) => {
-		//console.log(`change value to:${value}`)
-		setValue({type:'change', value:value})
+	const changeNumber = (_newValue) => {
+		setValue({type:'change', value:_newValue})
 	}
 
 	return {

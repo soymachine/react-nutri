@@ -40,18 +40,18 @@ function App() {
 	}, [])
 
 	const OnCartillaNewDataSelected = (newDate)=>{
-		console.log("[App] OnCartillaNewDataSelected")
+		//console.log("[App] OnCartillaNewDataSelected")
 		// Teniendo todos los datos ya pedidos a la base de datos de inicio esto se podría obviar
 		// y que la carga la soporte userData
+		userData.setToday(newDate)
 		cartillesService.retrieveDateData(userData.user, newDate)
 		.then( cartillaReturned =>{
 			if(cartillaReturned[0] != undefined){
 				userData.isTodayDataSet = false
-				userData.setTodayData(cartillaReturned[0])
-				
+				userData.setTodayData(cartillaReturned[0], false)
 				navigate('/data')
 			}else{
-				
+				console.error(`Datos vacios para esta fecha:${newDate}`)
 				userData.isTodayDataSet = false
 				userData.setBlankData()
 				navigate('/data')
@@ -73,9 +73,8 @@ function App() {
 			cartillaID = userData.getCartillaIDForDate(cartillaObj.date)
 		}
 
-		console.log(`hasCartillaforDate:${hasCartillaforDate} cartillaID:${cartillaID}`)
-
-
+		//console.log(`hasCartillaforDate:${hasCartillaforDate} cartillaID:${cartillaID}`)
+		console.log("[OnCartillaSubmit]")
 		console.log(cartillaObj)
 		//console.log(`OnCartillaSubmit, cartillaID:${cartillaID} userData.isTodayDataSet:${userData.isTodayDataSet}`)
 
@@ -86,7 +85,7 @@ function App() {
 			.then(cartillaReturned => {
 				// Mostrar algo de éxito aqui
 				// Agregar la info de todayData al objeto userData
-				userData.setTodayData(cartillaReturned)
+				userData.setTodayData(cartillaReturned, true)
 			})
 			.catch(error => {
 				console.log(error)
@@ -97,7 +96,7 @@ function App() {
 	}
 
 	const OnGoalsSubmit = (goalsObj) => {
-		console.log("[App] OnGoalsSubmit")
+		//console.log("[App] OnGoalsSubmit")
 		setResponseFromServer(false)
 		let goalID = null
 		if(userData.isGoalsSet){
@@ -137,7 +136,8 @@ function App() {
 			.then(todayData => {
 				//console.log("Hay datos para hoy?", todayData[0])
 				if(todayData[0] != undefined){
-					userData.setTodayData(todayData[0])
+					userData.setTodayData(todayData[0], false)
+					userData.setToday(todayData[0].date)
 				}
 				
 				//console.log("retrieve user goals")
@@ -150,9 +150,9 @@ function App() {
 					cartillesService.retrieveYearData(userData.user, userData.getCurrentYear())
 					.then(yearData =>{
 						userData.setYearData(yearData)
+						navigate('/data')
 					})
 
-					navigate('/data')
 				})
 			})
 	}
