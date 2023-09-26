@@ -27,6 +27,7 @@ loginRouter.post('/', async (request, response) => {
   console.log(`maxims`)
   console.log(maxims)
   // token expires in 60*60 seconds, that is, in one hour
+  // TODO, depende de lo que venga del front? (":check: Remember me")
   const token = jwt.sign(
     userForToken, 
     process.env.SECRET,

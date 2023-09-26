@@ -255,13 +255,11 @@ function Stats(props) {
 		})
 
 		const currentDayStyle = {}
-		console.log(`other.day.$D:${other.day.$D} start:${weekStartAndEnd.start} end:${weekStartAndEnd.end}`)
+		// console.log(`other.day.$D:${other.day.$D} start:${weekStartAndEnd.start} end:${weekStartAndEnd.end}`)
 		if((other.day.$D >= weekStartAndEnd.start) && (other.day.$D <= weekStartAndEnd.end)){
 			currentDayStyle.backgroundColor = "#1976d230"
 		}
 
-		console.log(currentDayStyle)
-				
 		const style = {
 			position:"absolute",
 			width:8,

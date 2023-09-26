@@ -9,7 +9,7 @@ import {
 import cartillesService from './services/cartilles'
 import goalsService from './services/goals'
 
-import Menu from './components/Menu'
+import Menu from './components/menu/Menu'
 
 import Login from './routes/Login'
 import Stats from './routes/Stats'
@@ -131,7 +131,7 @@ function App() {
 		userStorage.saveUserWithExpirationTime(user, remember)
 		
 		// Pescar si este usuario tiene datos para el dia de hoy
-		//console.log(user)
+		console.log(user)
 		cartillesService.retrieveTodayData(userData.user)
 			.then(todayData => {
 				//console.log("Hay datos para hoy?", todayData[0])
@@ -144,6 +144,7 @@ function App() {
 				goalsService.retrieveUserGoalsData(user)
 				.then(goalsData =>{
 					if(goalsData[0] != undefined){
+						// console.log(goalsData[0].proteines)
 						userData.setGoalsData(goalsData[0])
 					}
 

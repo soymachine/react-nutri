@@ -331,6 +331,31 @@ class UserData{
                 return this.isGoalsSet? this.goalsData.refrescos: defaultValue
             case "pes":
                 return this.isGoalsSet? this.goalsData.pes: defaultValue
+            /**** proteines ****/
+            case "carn_vermella_vegades":
+                return this.isGoalsSet && this.goalsData.proteines?.carn_vermella? this.goalsData.proteines.carn_vermella.vegades: defaultValue
+            case "carn_vermella_grams":
+                return this.isGoalsSet && this.goalsData.proteines?.carn_vermella? this.goalsData.proteines.carn_vermella.grams: defaultValue   
+            case "carn_blanca_vegades":
+                return this.isGoalsSet && this.goalsData.proteines?.carn_blanca? this.goalsData.proteines.carn_blanca.vegades: defaultValue
+            case "carn_blanca_grams":
+                return this.isGoalsSet && this.goalsData.proteines?.carn_blanca? this.goalsData.proteines.carn_blanca.grams: defaultValue
+            case "peix_blau_vegades":
+                return this.isGoalsSet && this.goalsData.proteines?.peix_blau? this.goalsData.proteines.peix_blau.vegades: defaultValue
+            case "peix_blau_grams":
+                return this.isGoalsSet && this.goalsData.proteines?.peix_blau? this.goalsData.proteines.peix_blau.grams: defaultValue 
+            case "peix_blanc_vegades":
+                return this.isGoalsSet && this.goalsData.proteines?.peix_blanc? this.goalsData.proteines.peix_blanc.vegades: defaultValue
+            case "peix_blanc_grams":
+                return this.isGoalsSet && this.goalsData.proteines?.peix_blanc? this.goalsData.proteines.peix_blanc.grams: defaultValue  
+            case "ous_vegades":
+                return this.isGoalsSet && this.goalsData.proteines?.ous? this.goalsData.proteines.ous.vegades: defaultValue
+            case "ous_grams":
+                return this.isGoalsSet && this.goalsData.proteines?.ous? this.goalsData.proteines.ous.grams: defaultValue    
+            case "llegums_vegades":
+                return this.isGoalsSet && this.goalsData.proteines?.llegums? this.goalsData.proteines.llegums.vegades: defaultValue
+            case "llegums_grams":
+                return this.isGoalsSet && this.goalsData.proteines?.llegums? this.goalsData.proteines.llegums.grams: defaultValue             
         }
     }
 

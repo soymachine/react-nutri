@@ -9,6 +9,8 @@ const regex = /^[0-9\b]+$/;
 const ObjectiveNumberForm = forwardRef(function NumberForm(props, refs) {
 	let quantity = useQuantity(props.initValue)
 
+	let marginTop = props.marginTop? props.marginTop: -2
+
 	const getQuantity = () =>{
 		/*
 		console.log(`getQuantity:`)
@@ -43,7 +45,7 @@ const ObjectiveNumberForm = forwardRef(function NumberForm(props, refs) {
 
 	return (
 		<>
-		<IconButton sx={{mt: -2, color: props.color}}  onClick={quantity.removeNumber} aria-label="delete">
+		<IconButton sx={{mt: marginTop, color: props.color}}  onClick={quantity.removeNumber} aria-label="delete">
 			<Remove />
 		</IconButton>
 		<TextField  
@@ -57,9 +59,9 @@ const ObjectiveNumberForm = forwardRef(function NumberForm(props, refs) {
 			}}
 		
 			id="outlined-basic" label={props.title} value={getQuantity()} onChange={handleValueChange} variant="outlined" 
-			helperText="(a la setmana)"
+			
 			/>
-		<IconButton sx={{mt: -2, color: props.color}} onClick={quantity.addNumber} aria-label="delete">
+		<IconButton sx={{mt: marginTop, color: props.color}} onClick={quantity.addNumber} aria-label="delete">
 			<Add />
 		</IconButton>
 		</>

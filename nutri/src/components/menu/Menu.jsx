@@ -16,6 +16,7 @@ import {
 	Routes, Route, Link
 } from 'react-router-dom'
 import { LocationOn, ThirtyFpsSelectRounded } from '@mui/icons-material';
+import './Menu.css';
 
 function Menu(props) {
 	const navigate = useNavigate()
@@ -42,13 +43,19 @@ function Menu(props) {
 		marginLeft: 10
 	}
 
+	const menuItemClass = {
+		fontFamily: 'Roboto',
+		fontWeight: "400",
+		marginRight:2.5
+	}
+
 	const menuDisplay = ()=>(
 		<div>
 			<Box sx={{ display: 'flex' }}>
 				<CssBaseline />
 				<Drawer variant="permanent" >
 
-					<Box sx={{ px: [8], 
+					<Box sx={{ px: [1], 
 						display: 'flex', flexDirection: 'column',
 						alignItems: 'center', }}>
 						<img
@@ -70,7 +77,7 @@ function Menu(props) {
 								<ListItemIcon>
 									<LayersIcon />
 								</ListItemIcon>
-								<ListItemText primary="Dades diaries" />
+								<ListItemText classes={{primary:"menu-item"}} primary="DADES DIARIES" />
 							</ListItemButton>
 							{/*  Objectius  */}
 							<ListItemButton
@@ -82,7 +89,7 @@ function Menu(props) {
 								<ListItemIcon>
 									<EmojiEventsIcon />
 								</ListItemIcon>
-								<ListItemText primary="Objectius" />
+								<ListItemText classes={{primary:"menu-item"}} primary="OBJECTIUS" />
 							</ListItemButton>
 							{/*  Estadístiqes  */}
 							<ListItemButton
@@ -94,7 +101,7 @@ function Menu(props) {
 								<ListItemIcon>
 									<BarChartIcon />
 								</ListItemIcon>
-								<ListItemText primary="Estadístiques" />
+								<ListItemText classes={{primary:"menu-item"}} primary="ESTADÍSTIQUES" />
 							</ListItemButton>
 							
 						</React.Fragment>	

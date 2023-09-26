@@ -9,6 +9,7 @@ const usuariSchema = mongoose.Schema({
   },
   camps:Array, 
   maxims:Array, 
+  proteines:Array, 
   nom:String,
   passwordHash: String,
   cartilles: [

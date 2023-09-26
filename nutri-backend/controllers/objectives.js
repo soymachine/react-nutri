@@ -28,6 +28,7 @@ const constructObjectiveObj = (body, user) =>{
     forca:body.forca,
     refrescos: body.refrescos,
     pes: body.pes,
+    proteines:body.proteines,
     user: user.id
   }
 

@@ -11,6 +11,7 @@ const objectiveSchema = new mongoose.Schema({
     forca: Number,
     refrescos: Number,
     pes: Number,
+    proteines: Object,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Usuari'

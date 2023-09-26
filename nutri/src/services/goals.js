@@ -34,8 +34,6 @@ const updateObjectives = async (cartillaObj, cartillaID) => {
 	const config = {
 		headers: { Authorization: token },
 	}
-	//console.log("updateCartilla cartillaObj.id " + cartillaObj.id)
-	//console.log(cartillaObj)
 	const response = await axios.put(`${baseUrl}/${cartillaID}`, cartillaObj, config)
 	return response.data
 }

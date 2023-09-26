@@ -47,7 +47,6 @@ function ProteinesTables(props) {
 		"carn_blanca": carnBlancaAcc,
 		"peix_blanc": peixBlancAcc,
 		"peix_blau": peixBlauAcc,
-		"peix_blau": peixBlauAcc,
 		"llegums": llegumsAcc,
 		"ous": ousAcc,
 	}
@@ -128,7 +127,7 @@ function ProteinesTables(props) {
                                     >
                                     <TableCell sx={centeringStyle} component="th" scope="row">{getProteinaLabel(proteina.id)}</TableCell>
                                     <TableCell sx={centeringStyle}>{acumulados[proteina.id]}</TableCell>
-                                    <TableCell sx={centeringStyle}>{UserData.maxProteinasPerWeekTable[proteina.id]}</TableCell>
+                                    <TableCell sx={centeringStyle}>{userData.getGoalsData(`${proteina.id}_vegades`)}</TableCell>
                                     <TableCell sx={centeringStyle}>
                                         <ResultIcon type="maxims" acumulat={acumulados[proteina.id]} maxSetmana={UserData.maxProteinasPerWeekTable[proteina.id]} />                                            
                                     </TableCell>
