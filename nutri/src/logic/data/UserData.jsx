@@ -10,6 +10,24 @@ class UserData{
     static defaultValueNumber = 0
     static defaultValueString = ""
     static defaultValueBoolean = false
+    static proteinasTable = {
+        "carn_vermella": 0,
+        "carn_blanca": 1,
+        "peix_blanc": 2,
+        "peix_blau": 3,
+        "llegums": 4,
+        "ous": 5,
+        "res": 6,
+    }
+
+    static maxProteinasPerWeekTable = {
+        "carn_vermella": 2,
+        "carn_blanca": 2,
+        "peix_blanc": 2,
+        "peix_blau": 2,
+        "llegums": 2,
+        "ous": 4
+    }
 
     constructor(props) {
         this.user= ''
@@ -57,14 +75,15 @@ class UserData{
         
         this.isTodayDataSet = true
         this.todayData = todayData
-        console.log(`todayData.date:${todayData.date}`)
-        console.log(`todayData:`)
+        console.log(`[UserData ->setTodayData] todayData.date:${todayData.date} toUpdate:${toUpdate}`)
+        console.log(`[UserData ->setTodayData] todayData:`)
         console.log(todayData)
         if(this.yearData && toUpdate){
             // Actualizamos también la entrada de este dia en yearData
             this.yearData = this.yearData.map( cartilla => {
-                //console.log(`cartilla.date:${cartilla.date} todayData.date:´${todayData.date}`)
-                if(cartilla.date == todayData.date){
+                console.log(`cartilla.date:${cartilla.date} todayData.date:´${todayData.date}`)
+                
+                if(this.areDatesEqual(cartilla.date, todayData.date)){
                     console.log("fecha encontrada, vamos a actualizarla")
                     return todayData
                 }else{
@@ -73,6 +92,26 @@ class UserData{
             })
             // console.log(this.yearData)
         }
+    }
+
+    areDatesEqual = (date1, date2)=>{
+        date1 = new Date(date1)
+        date2 = new Date(date2)
+
+        const date1Year = date1.getFullYear()
+        const date1Month = date1.getMonth()
+        const date1Day = date1.getDate()
+
+        const date2Year = date2.getFullYear()
+        const date2Month = date2.getMonth()
+        const date2Day = date2.getDate()
+
+        if(date1Year == date2Year && date1Month == date2Month && date1Day == date2Day){
+            return true
+        }
+
+        return false
+
     }
 
     getMaximsForAliment = (aliment)=>{
@@ -137,6 +176,28 @@ class UserData{
         return alimentoAcumulado
     }
 
+    getSumatorioDeProteinas = (proteina, coleccionCartillas) =>{
+
+        const proteina_id = UserData.proteinasTable[proteina]
+
+        const proteinaAcumulada = coleccionCartillas.reduce((sum, cartilla) =>{
+            // Los ids
+            const proteines_esmorzar = cartilla.berenar.proteines
+            const proteines_migMati = cartilla.migMati.proteines
+            const proteines_dinar = cartilla.dinar.proteines
+            const proteines_sopar = cartilla.sopar.proteines
+
+            let totalProteines = 0
+            if(proteines_esmorzar == proteina_id) totalProteines += 1
+            if(proteines_migMati == proteina_id) totalProteines += 1
+            if(proteines_dinar == proteina_id) totalProteines += 1
+            if(proteines_sopar == proteina_id) totalProteines += 1
+
+			return sum + totalProteines
+		}, 0)
+        return proteinaAcumulada
+    }
+
     getCartillasFromCurentWeek = (currentDate) =>{
         // from:"2023/09/11", to:"2023/09/18"
         const today = new Date(currentDate)
@@ -172,6 +233,19 @@ class UserData{
         const endDateStr = `${this.zeroPad(dayWeekEnd, 2)}/${this.zeroPad(month, 2)}`
         const str = `Setmana del ${initialDateStr} al ${endDateStr}`
         return str
+    }
+
+    getStartAndEndWeekDays = (currentDate) =>{
+        const today = new Date(currentDate)
+        let dayNumber = today.getDay()
+        if(dayNumber == 0) dayNumber = 7
+        const day = today.getDate()
+        const dayWeekStart = day - (dayNumber - 1)
+        const dayWeekEnd = dayWeekStart + 6
+        return {
+            start:dayWeekStart,
+            end:dayWeekEnd
+        }
     }
 
     getCartillaDayAndMonth = (cartilla) =>{

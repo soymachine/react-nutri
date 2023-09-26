@@ -88,15 +88,6 @@ function CartillaForm(props) {
 		"extresSalats": extresSalatsNumberRef
 	}
 
-	const checkActualDate = (date) =>{
-		if(date == null){
-			console.error("New date on the fly")
-			return new Date()
-		}else{
-			return date
-		}
-	}
-
 	const [hasData, setHasData] = useState(false)
 	const [date, setDate] = useState(()=>{return userData.today})
 	const [esmorzar, setEsmorzar] = useState(()=>{return userData.getTodayData("esmorzar")})
@@ -115,6 +106,7 @@ function CartillaForm(props) {
 	const [extresSalats, setExtresSalats] = useState(0)
 	const [alcohol, setAlcohol] = useState(0)
 	const [refrescos, setRefrescos] = useState(0)
+	//const [acumulados, setAcumulados] = useState(0)
 	
 	const [user, setUser] = useState(props.user)
 	const [openBackdrop, setOpenBackdrop] = useState(false)
@@ -158,6 +150,7 @@ function CartillaForm(props) {
 		"refrescos": refrescosAcc,
 		"extresSalats": extresSalatsAcc
 	}
+	
 
 	const returnInfoDate = ()=>{
 		const today = dayjs(new Date().toString())
@@ -208,7 +201,7 @@ function CartillaForm(props) {
 		if(ref.current){
 			const maxims = userData.getMaximsForAliment(alimento)		
 		
-			const currentValue = initValues[alimento]
+			const currentValue = ref.current.getQuantity() //initValues[alimento]
 			//console.log(ref.current.getQuantity())
 			//console.log(`currentValue:${currentValue} maxims.dia:${maxims.dia} maxims.setmana:${maxims.setmana}`)
 
@@ -221,14 +214,14 @@ function CartillaForm(props) {
 			{
 				// current > max a la setmana?
 				return lightRedColor
+			}else if(currentValue == maxims.dia || acumulado == maxims.setmana)
+			{
+				return lightYellowColor
 			}else if(currentValue == 0)
 			{
 				return whiteColor
 			}
-			else if(currentValue == maxims.dia || acumulado == maxims.setmana)
-			{
-				return lightYellowColor
-			}else{
+			else{
 				return lightGreenColor
 			}
 		}
@@ -252,6 +245,7 @@ function CartillaForm(props) {
 			setDate(new Date().toString())
 		}
 		
+		
 	}
 
 	useEffect(hook, [])
@@ -267,15 +261,6 @@ function CartillaForm(props) {
 	}
 
 	useEffect(dataUpdateHook, [props, userData.isTodayDataSet])
-
-	const valuesHook = () => {
-		// TODO, pending
-		if(fruitaNumberRef.current){
-			// console.log(`valuesHook fruita:${fruitaNumberRef.current.getQuantity()}`) // 
-		}
-	}
-
-	useEffect(valuesHook, [verdura, fruita, xocolata, dolcos, extresSalats, alcohol, refrescos])
 
 	const handleCloseBackdrop = () => {
 		setOpenBackdrop(false);

@@ -2,17 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Box, Chip, Divider, TextField, Alert, AlertTitle, Paper, IconButton, Typography, List } from '@mui/material'
 import UserData from '../logic/data/UserData'
 import CustomBackdrop from '../components/helpers/CustomBackdrop'
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PendingIcon from '@mui/icons-material/Pending';
+import ObjectivesTables from '../components/stats/ObjectivesTables'
+import ProteinesTables from '../components/stats/ProteinesTables'
 
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ca';
@@ -21,15 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { Circle } from '@mui/icons-material'
 
-import {
-	ResponsiveChartContainer,
-	BarPlot,
-	LinePlot,
-	LineChart,
-	ChartsXAxis,
-	ChartsYAxis,
-	axisClasses,
-  } from '@mui/x-charts';
+import { LineChart } from '@mui/x-charts';
 import { DatePicker, StaticDatePicker } from '@mui/x-date-pickers';
 
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -71,35 +54,9 @@ let dadesFuturesString = "(Estem a una data futura)"
 let dadesPasadesString = "(Estem a una data del pasat)"
 let dadesActualsString = "(Dades d'avui)"
 
-const createTag = (type)=>{
-    switch(type){
-        case "checked":
-            return (<CheckCircleIcon sx={checkedStyle} />)
-        case "pending":
-            return (<ErrorOutlineIcon sx={pendingStyle} />)
-    }
-}
-
-const addTagMinims = (accumulat, minSetmana)=>{
-	if(accumulat >= minSetmana){
-		return createTag("checked")
-	}else{
-		return createTag("pending")	
-	}
-}
-
-const addTagMaxims = (accumulat, maxSetmana)=>{
-	if(accumulat > maxSetmana){
-		return createTag("pending")
-	}else{
-		return createTag("checked")	
-	}
-}
-
 function ActionList(props) {
 	return (
 		<List>
-		
 		</List>
 	);
 }
@@ -127,24 +84,19 @@ function Stats(props) {
 
 	const [user, setUser] = useState(props.user)
 	const [xLabels, setXLabels] = useState( ["1","2","3","4","5","6","7"])
-	const [pesValues, setPesValues] = useState( ["1","2","3","4","5","6","7"])
-	const [pesObjectiuValues, setPesObjectiuValues] = useState( ["1","2","3","4","5","6","7"])
+	const [pesValues, setPesValues] = useState( [1,2,3,4,5,6,7])
+	const [hasPesValues, setHasPesValues] = useState(false)
+	const [pesObjectiuValues, setPesObjectiuValues] = useState( [1,2,3,4,5,6,7])
 	const [minValue, setMinValue] = useState(0)
 	const [maxValue, setMaxValue] = useState(1000)
 	const [date, setDate] = useState(()=>{return userData.today})
-	const [value, setValue] = useState(dayjs(new Date().toString()));
-	const [setmanaString, setSetmanaString] = useState("");
-
-	const setmanaText = userData.getStringSetmana(date)
+	const [value, setValue] = useState(dayjs(userData.today.toString()));
+	
 	const dataCartillas = userData.getCartillasFromCurentWeek(date)
-	console.log(dataCartillas)
-	let verduresAcc = 0
-	let fruitesAcc = 0
-	let dolcosAcc = 0
-	let xocolataAcc = 0
-	let extresSalatsAcc = 0
-	let alcoholAcc = 0
-	let refrescosAcc = 0
+	console.log("[Stats]")
+	console.log(`date:${date}`)
+	//console.log(dataCartillas)
+
 
 	const CustomLayout = (props)=> {
 		const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
@@ -176,27 +128,6 @@ function Stats(props) {
 		);
 	}
 	
-	if(dataCartillas){
-		verduresAcc = userData.getSumatorioDe("verdura", dataCartillas)
-		fruitesAcc = userData.getSumatorioDe("fruita", dataCartillas)
-		dolcosAcc = userData.getSumatorioDe("dolcos", dataCartillas)
-		xocolataAcc = userData.getSumatorioDe("xocolata", dataCartillas)
-		extresSalatsAcc = userData.getSumatorioDe("extresSalats", dataCartillas)
-		alcoholAcc = userData.getSumatorioDe("alcohol", dataCartillas)
-		refrescosAcc = userData.getSumatorioDe("refrescos", dataCartillas)
-		//console.log(`xocolataAcc:${xocolataAcc} extresSalatsAcc:${extresSalatsAcc} dolcosAcc:${dolcosAcc} verduresAcc:${verduresAcc} fruitesAcc:${fruitesAcc} refrescosAcc:${refrescosAcc} alcoholAcc:${alcoholAcc}`)
-	}
-	
-	const acumulados = {
-		"fruita": fruitesAcc,
-		"verdura": verduresAcc,
-		"alcohol": alcoholAcc,
-		"xocolata": xocolataAcc,
-		"dolcos": dolcosAcc,
-		"refrescos": refrescosAcc,
-		"extresSalats": extresSalatsAcc
-	}
-
 	const noPaddingStyle = {
 		padding:1,
 		textAlign:"center"
@@ -220,50 +151,54 @@ function Stats(props) {
 		}
 
 		// Actualizamos los datos de los dias 11 a 17 de septiembre  (YYYY-MM-DD)
-		const dataCartillas = userData.getCartillasFromDates({from:"2023/09/11", to:"2023/09/18"})
-
+		// const dataCartillas = userData.getCartillasFromDates({from:"2023/09/11", to:"2023/09/18"})
+		//console.log(`dataCartillas en hook lenght:${dataCartillas.length}`)		
+		//console.log(dataCartillas)		
 		if(dataCartillas){
-			let newLabels = dataCartillas.map(cartilla =>{
-				return userData.getCartillaDayAndMonth(cartilla)
-			})
-	
-			let newPesValues = dataCartillas.map(cartilla =>{
-				return cartilla.pes
-			})
-	
-			let newObjectiveValues = dataCartillas.map(cartilla =>{
-				return userData.goalsData.pes
-			})
-	
-			let _minValue = userData.goalsData.pes;
-			let _maxValue = userData.goalsData.pes;
-			newPesValues.reduce(
-				(accumulator, currentValue) => 
-				{
-					// console.log(`current value ${currentValue}`)
-					if(currentValue < _minValue) _minValue = currentValue
-					if(currentValue > _maxValue) _maxValue = currentValue				
-				}, minValue)
+
+			if(dataCartillas.length == 7 ){
+				setHasPesValues(true)
+
+				let newLabels = dataCartillas.map(cartilla =>{
+					return userData.getCartillaDayAndMonth(cartilla)
+				})
+		
+				let newPesValues = dataCartillas.map(cartilla =>{
+					return cartilla.pes
+				})
+		
+				let newObjectiveValues = dataCartillas.map(cartilla =>{
+					return userData.goalsData.pes
+				})
+		
+				let _minValue = userData.goalsData.pes;
+				let _maxValue = userData.goalsData.pes;
+				newPesValues.reduce(
+					(accumulator, currentValue) => 
+					{
+						// console.log(`current value ${currentValue}`)
+						if(currentValue < _minValue) _minValue = currentValue
+						if(currentValue > _maxValue) _maxValue = currentValue				
+					}, minValue)
+				
+		
+				_minValue -= spanAmount 	
+				_maxValue += spanAmount 	
+		
+				setMinValue(_minValue)
+				setMaxValue(_maxValue)
+		
+				setXLabels(newLabels)
+				setPesValues(newPesValues)
+				setPesObjectiuValues(newObjectiveValues)
+			}else{
+				setHasPesValues(false)
+			}
 			
-	
-			_minValue -= spanAmount 	
-			_maxValue += spanAmount 	
-	
-			setMinValue(_minValue)
-			setMaxValue(_maxValue)
-	
-			/*
-			console.log(`minValue:${_minValue} maxValue:${_maxValue}`);
-			console.log(newObjectiveValues);
-			console.log(userData.goalsData);
-			*/
-			setXLabels(newLabels)
-			setPesValues(newPesValues)
-			setPesObjectiuValues(newObjectiveValues)
 		}
 	}
 
-	useEffect(hook, [])
+	useEffect(hook, [date])
 
 	const returnToHome = () => {
 		navigate('/')
@@ -303,6 +238,8 @@ function Stats(props) {
 		}
 	}
 
+	let weekStartAndEnd = userData.getStartAndEndWeekDays(date)
+
 	function CustomDay({ selectedDay, ...other }) {
 		// do something with 'selectedDay'
 		let backgroundColor = "#FFFFFF"
@@ -316,6 +253,14 @@ function Stats(props) {
 			
 			return (day == other.day.$D && year == other.day.$y && month == other.day.$M)
 		})
+
+		const currentDayStyle = {}
+		console.log(`other.day.$D:${other.day.$D} start:${weekStartAndEnd.start} end:${weekStartAndEnd.end}`)
+		if((other.day.$D >= weekStartAndEnd.start) && (other.day.$D <= weekStartAndEnd.end)){
+			currentDayStyle.backgroundColor = "#1976d230"
+		}
+
+		console.log(currentDayStyle)
 				
 		const style = {
 			position:"absolute",
@@ -326,14 +271,16 @@ function Stats(props) {
 			color:"#02bb02"
 		}
 		
+		// #1976d230 para los dias de la semana en curso
+
 		const renderDay = (hasData)=>{
 			if(hasData){
-				return (<PickersDay {...other}>
+				return (<PickersDay {...other} sx={currentDayStyle}>
 							<Circle sx={{position:"relative"}} style={style}/>
 							{other.day.$D}
 						</PickersDay>)
 			}else{
-				return (<PickersDay {...other}>
+				return (<PickersDay {...other} sx={currentDayStyle}>
 					{other.day.$D}
 				</PickersDay>)
 			}
@@ -352,8 +299,6 @@ function Stats(props) {
 		}
 	}
 
-	
-
 	const colorForDatePicker = returnColorDate()
 
 	const estadistiquesRender = () => (
@@ -366,7 +311,8 @@ function Stats(props) {
 						flexDirection: 'row',
 						alignItems: 'center',
 						justifyContent:"center",
-						marginTop:2
+						marginTop:2,
+						minWidth:1000
 				}}>
 					<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ca" >
 						<StaticDatePicker
@@ -398,153 +344,50 @@ function Stats(props) {
 						marginTop:2
 						}}>
 				</Box>	
-				<LineChart
-					width={1000}
-					height={300}
-					series={[
-						{ yAxisKey: 'yAxisID', data: pesValues, label: 'Evolució', id: 'pvId' },
-						{ xAxisKey: 'xAxisID', data: pesObjectiuValues, label: 'Objectiu', id: 'ovId' },
-					]}
-					xAxis={[{ 
-						scaleType: 'point', data: xLabels, id: 'xAxisID'
-					}]}
-					yAxis={[{
-						scaleTyle:'point', id: 'yAxisID',
-						min: minValue, max: maxValue,
-					}]}
-					sx={{
+				{hasPesValues?
+					(
+						<LineChart
+							width={1000}
+							height={300}
+							series={[
+								{ yAxisKey: 'yAxisID', data: pesValues, label: 'Evolució', id: 'pvId' },
+								{ xAxisKey: 'xAxisID', data: pesObjectiuValues, label: 'Objectiu', id: 'ovId' },
+							]}
+							xAxis={[{ 
+								scaleType: 'point', data: xLabels, id: 'xAxisID'
+							}]}
+							yAxis={[{
+								scaleTyle:'point', id: 'yAxisID',
+								min: minValue, max: maxValue,
+							}]}
+							sx={{
+								
+								'.MuiLineElement-root, .MuiMarkElement-root': {
+								strokeWidth: 1,
+								},
+								'.MuiLineElement-series-ovId': {
+								strokeDasharray: '5',
+								},
+								'.MuiMarkElement-root:not(.MuiMarkElement-highlighted)': {
+								fill: '#fff',
+								},
+								'& .MuiMarkElement-highlighted': {
+								stroke: 'none',
+								},
+								marginTop:-10,
+							}}
+						/>
 						
-						'.MuiLineElement-root, .MuiMarkElement-root': {
-						strokeWidth: 1,
-						},
-						'.MuiLineElement-series-ovId': {
-						strokeDasharray: '5',
-						},
-						'.MuiMarkElement-root:not(.MuiMarkElement-highlighted)': {
-						fill: '#fff',
-						},
-						'& .MuiMarkElement-highlighted': {
-						stroke: 'none',
-						},
-						marginTop:-10,
-					}}
-				/>
-				<Divider maxwidth="md" sx={{m:1}}>
-					<Chip label="Objectius mínims"/>
-				</Divider>
-				<TableContainer maxwidth="md" sx={{mt:3, mb:3}} component={Paper}>
-					<Table sx={{}} aria-label="simple table">
-						<TableHead>
-							<TableRow sx={{backgroundColor:lightGreyColor,
-								'& .MuiTableCell-root':{fontWeight:700} }}>
-								<TableCell sx={firstElementStyle} >Tipus</TableCell>
-								<TableCell sx={noPaddingStyle} >Total setmana</TableCell>
-								<TableCell sx={noPaddingStyle} >Min. setmana</TableCell>
-								<TableCell sx={noPaddingStyle} >Resultat</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{/* ROWS aqui, condicionales según usuario */}
-							{userData.hasCamp("verdura") &&
-								<TableRow
-									key="verdura"
-									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-									>
-									<TableCell sx={centeringStyle} component="th" scope="row">Verdura</TableCell>
-									<TableCell sx={centeringStyle}>{acumulados["verdura"]}</TableCell>
-									<TableCell sx={centeringStyle}>{userData.user.maxims["verdura"].setmana}</TableCell>
-									<TableCell sx={centeringStyle}>{addTagMinims(acumulados["verdura"], userData.user.maxims["verdura"].setmana)}</TableCell>
-								</TableRow>
-							}
-							{userData.hasCamp("fruita") &&
-								<TableRow
-									key="fruita"
-									sx={{ '&:last-child td, &:last-child th': { border: 0} }}
-									>
-									<TableCell sx={centeringStyle} component="th" scope="row">Fruita</TableCell>
-									<TableCell sx={centeringStyle}>{acumulados["fruita"]}</TableCell>
-									<TableCell sx={centeringStyle}>{userData.user.maxims["fruita"].setmana}</TableCell>
-									<TableCell sx={centeringStyle}>{addTagMinims(acumulados["fruita"], userData.user.maxims["fruita"].setmana)}</TableCell>
-
-								</TableRow>
-							}							
-						</TableBody>
-					</Table>
-				</TableContainer>	
-				<Divider maxwidth="md" sx={{m:1}}>
-					<Chip label="Objectius máxims"/>
-				</Divider>	
-				<TableContainer sx={{mt:3, mb:3}} component={Paper}>
-					<Table sx={{}} aria-label="simple table">
-						<TableHead>
-							<TableRow sx={{backgroundColor:lightGreyColor,
-								'& .MuiTableCell-root':{fontWeight:700} }}>
-								<TableCell sx={firstElementStyle} >Tipus</TableCell>
-								<TableCell sx={noPaddingStyle} >Total setmana</TableCell>
-								<TableCell sx={noPaddingStyle} >Max. setmana</TableCell>
-								<TableCell sx={noPaddingStyle} >Resultat</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{/* ROWS aqui, condicionales según usuario */}
-							{userData.hasCamp("xocolata") &&
-								<TableRow
-									key="xocolata"
-									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-									>
-									<TableCell sx={centeringStyle} component="th" scope="row">Xocolata</TableCell>
-									<TableCell sx={centeringStyle}>{xocolataAcc}</TableCell>
-									<TableCell sx={centeringStyle}>{userData.user.maxims["xocolata"].setmana}</TableCell>
-									<TableCell sx={centeringStyle}>{addTagMaxims(acumulados["xocolata"], userData.user.maxims["xocolata"].setmana)}</TableCell>
-								</TableRow>
-							}
-							{userData.hasCamp("dolcos") &&
-								<TableRow
-									key="dolcos"
-									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-									>
-									<TableCell sx={centeringStyle} component="th" scope="row">Dolços</TableCell>
-									<TableCell sx={centeringStyle}>{dolcosAcc}</TableCell>
-									<TableCell sx={centeringStyle}>{userData.user.maxims["dolcos"].setmana}</TableCell>
-									<TableCell sx={centeringStyle}>{addTagMaxims(acumulados["dolcos"], userData.user.maxims["dolcos"].setmana)}</TableCell>
-								</TableRow>
-							}
-							{userData.hasCamp("extresSalats") &&
-								<TableRow
-									key="extresSalats"
-									sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
-									>
-									<TableCell sx={centeringStyle} component="th" scope="row">Extres Salats</TableCell>
-									<TableCell sx={centeringStyle}>{extresSalatsAcc}</TableCell>
-									<TableCell sx={centeringStyle}>{userData.user.maxims["extresSalats"].setmana}</TableCell>
-									<TableCell sx={centeringStyle} >{addTagMaxims(acumulados["extresSalats"], userData.user.maxims["extresSalats"].setmana)}</TableCell>
-								</TableRow>
-							}
-							{userData.hasCamp("alcohol") &&
-								<TableRow
-									key="alcohol"
-									sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
-									>
-									<TableCell sx={centeringStyle} component="th" scope="row">Alcohol</TableCell>
-									<TableCell sx={centeringStyle}>{alcoholAcc}</TableCell>
-									<TableCell sx={centeringStyle}>{userData.user.maxims["alcohol"].setmana}</TableCell>
-									<TableCell sx={centeringStyle}>{addTagMaxims(acumulados["alcohol"], userData.user.maxims["alcohol"].setmana)}</TableCell>
-								</TableRow>
-							}
-							{userData.hasCamp("refrescos") &&
-								<TableRow
-									key="refrescos"
-									sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
-									>
-									<TableCell sx={centeringStyle} component="th" scope="row">Refrescos</TableCell>
-									<TableCell sx={centeringStyle}>{refrescosAcc}</TableCell>
-									<TableCell sx={centeringStyle}>{userData.user.maxims["refrescos"].setmana}</TableCell>
-									<TableCell sx={centeringStyle}>{addTagMaxims(acumulados["refrescos"], userData.user.maxims["refrescos"].setmana)}</TableCell>
-								</TableRow>
-							}
-						</TableBody>
-					</Table>
-				</TableContainer>						
+					):
+					(
+						<Typography className="title" sx={{fontSize:".9em", mb:4, mt:4}} component="h1" variant="h5">
+							(<strong>No hi han dades suficients</strong> de pes per aquesta setmana)
+						</Typography>
+					)
+				}
+				
+				<ObjectivesTables dataCartillas={dataCartillas} />				
+				<ProteinesTables dataCartillas={dataCartillas} />				
 			</div>
 		</>
 	)
