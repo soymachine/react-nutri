@@ -86,8 +86,12 @@ function Login(props) {
 						}}
 					>
 						<img
-							alt={`Avatar n°1`}
-							src={`/src/assets/logo.png`}
+							alt={`Logo image nutriapp`}
+							src={`/images/logo.png`}
+						/>
+						<img
+							alt={`Logo text nutriapp`}
+							src={`/images/nutriapp_text.png`}
 						/>
 						<Divider maxwidth="xs" sx={{width: '100%',mb:2}}>		
 							

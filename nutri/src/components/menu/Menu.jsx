@@ -55,12 +55,12 @@ function Menu(props) {
 				<CssBaseline />
 				<Drawer variant="permanent" >
 
-					<Box sx={{ px: [1], 
+					<Box sx={{ px: [1], mt:3, mb:3, 
 						display: 'flex', flexDirection: 'column',
 						alignItems: 'center', }}>
 						<img
-							alt={`Avatar n°1`}
-							src={`/src/assets/logo.png`}
+							alt={`Nutriapp logo`}
+							src={`/images/logo.png`}
 						/>
 						
 					</Box>
@@ -110,7 +110,7 @@ function Menu(props) {
 						<Box sx={{ p: 2, display: 'flex' }}>
 							<Avatar
 								alt={`Avatar n°1`}
-								src={`/src/assets/${props.user.username}_profile.png`}
+								src={`/images/${props.user.username}_profile.png`}
 							/>
 							<Stack sx={{ml:2, mt:1}} spacing={1}>
 								<Typography  fontWeight={700}>{props.user.username}</Typography>
