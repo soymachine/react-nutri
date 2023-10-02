@@ -1,6 +1,6 @@
 import axios from 'axios'
 //const baseUrl = 'http://localhost:3001/persons'
-const baseUrl = 'http://localhost:3001/api/nutri/cartilles'
+const baseUrl = '/api/nutri/cartilles'
 
 let token = null
 
