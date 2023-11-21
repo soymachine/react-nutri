@@ -35,8 +35,22 @@ function Copyright(props) {
 	);
   }
   
- 
-  
+  const styles = {
+    main: {
+		backgroundColor: "#f1f1f1",
+		width: "100%",
+		borderRadius: "4px",
+    	boxShadow: "rgba(0, 0, 0, 0.12) 0px 0px 1px -2px, rgba(0, 0, 0, 0.12) 0px 0px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
+    	marginTop: "10px",
+		fontSize:"14px",
+		padding:"8px",
+    },
+    inputText: {
+      padding: "10px",
+      color: "red",
+    },
+  };
+
 const defaultTheme = createTheme();
 
 function Login(props) {
@@ -138,16 +152,20 @@ function Login(props) {
 							Sign In
 							</Button>
 							<Grid container>
-							<Grid item xs>
-								<Link href="#" variant="body2">
-								Forgot password?
-								</Link>
-							</Grid>
-							<Grid item>
-								<Link href="#" variant="body2">
-								{"Don't have an account? Sign Up"}
-								</Link>
-							</Grid>
+								<Grid item xs>
+									<div>
+									To test the app use these credentials:
+									</div>
+									<div style={styles.main}>
+										<div>
+										USER: <strong>test</strong>
+										</div>
+										<div>
+										PASSWORD: <strong>1234</strong>
+										</div>
+									</div>
+									
+								</Grid>
 							</Grid>
 						</Box>
 					</Box>
